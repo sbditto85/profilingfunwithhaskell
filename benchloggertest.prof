@@ -1,0 +1,93 @@
+	Thu Jun 15 21:22 2017 Time and Allocation Profiling Report  (Final)
+
+	   benchloggertest.exe +RTS -p -RTS
+
+	total time  =       28.18 secs   (28179 ticks @ 1000 us, 1 processor)
+	total alloc = 20,679,958,176 bytes  (excludes profiling overheads)
+
+COST CENTRE  MODULE SRC                         %time %alloc
+
+slog         Main   src\Main.hs:(41,1)-(44,20)   82.4   48.5
+buildMessage Main   src\Main.hs:(37,1)-(38,73)   16.6   51.5
+
+
+                                                                                                                         individual      inherited
+COST CENTRE                          MODULE                   SRC                                     no.     entries  %time %alloc   %time %alloc
+
+MAIN                                 MAIN                     <built-in>                               83          0    0.0    0.0   100.0  100.0
+ CAF                                 GHC.IO.Encoding.CodePage <entire-module>                         152          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.FD                <entire-module>                         148          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Encoding          <entire-module>                         147          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.Text       <entire-module>                         142          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.FD         <entire-module>                         136          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.POSIX    <entire-module>                         123          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                    Main                     <no location info>                       90          0    0.0    0.0     0.0    0.0
+  show                               Main                     src\Main.hs:(14,5)-(19,27)              215          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                    Main                     <no location info>                       95          0    0.0    0.0     0.0    0.0
+  show                               Main                     src\Main.hs:(14,5)-(19,27)              211          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6             Main                     <no location info>                      100          0    0.0    0.0     0.0    0.0
+  show                               Main                     src\Main.hs:(23,5)-(27,26)              199          0    0.0    0.0     0.0    0.0
+ CAF:bench10                         Main                     <no location info>                      101          0    0.0    0.0     0.0    0.0
+  splotch                            Main                     src\Main.hs:(30,1)-(34,55)              213          0    0.0    0.0     0.0    0.0
+   show                              Main                     src\Main.hs:(14,5)-(19,27)              214          1    0.0    0.0     0.0    0.0
+ CAF:bench11                         Main                     <no location info>                      112          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              170          0    0.0    0.0     0.0    0.0
+   mkAutoUpdate                      Control.AutoUpdate       Control\AutoUpdate.hs:106:1-47          171          1    0.0    0.0     0.0    0.0
+    mkAutoUpdateHelper               Control.AutoUpdate       Control\AutoUpdate.hs:(117,1)-(195,35)  172          1    0.0    0.0     0.0    0.0
+ CAF:bench12                         Main                     <no location info>                      111          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              183          0    0.0    0.0     0.0    0.0
+ CAF:bench16                         Main                     <no location info>                      110          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              188          0    0.0    0.0     0.0    0.0
+ CAF:bench18                         Main                     <no location info>                      109          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              189          0    0.0    0.0     0.0    0.0
+ CAF:bench19                         Main                     <no location info>                      108          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              169          0    0.0    0.0     0.0    0.0
+ CAF:bench2                          Main                     <no location info>                      118          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              167          1    0.0    0.0     0.0    0.0
+ CAF:bench3                          Main                     <no location info>                      117          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              190          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              191          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     192          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              193          0    0.0    0.0     0.0    0.0
+      show                           Main                     src\Main.hs:(23,5)-(27,26)              194          1    0.0    0.0     0.0    0.0
+ CAF:bench4                          Main                     <no location info>                      116          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              195          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              196          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     197          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              198          0    0.0    0.0     0.0    0.0
+ CAF:bench5                          Main                     <no location info>                      115          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              200          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              201          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     202          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              203          0    0.0    0.0     0.0    0.0
+      splotch                        Main                     src\Main.hs:(30,1)-(34,55)              204          1    0.0    0.0     0.0    0.0
+ CAF:bench6                          Main                     <no location info>                      114          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              205          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              206          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     207          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              208          0    0.0    0.0     0.0    0.0
+ CAF:bench7                          Main                     <no location info>                      113          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              216          0    0.0    0.0     0.0    0.0
+ CAF:bench8                          Main                     <no location info>                      103          0    0.0    0.0     0.0    0.0
+  splotch                            Main                     src\Main.hs:(30,1)-(34,55)              209          0    0.0    0.0     0.0    0.0
+   show                              Main                     src\Main.hs:(14,5)-(19,27)              210          1    0.0    0.0     0.0    0.0
+ CAF:bench9                          Main                     <no location info>                      102          0    0.0    0.0     0.0    0.0
+  splotch                            Main                     src\Main.hs:(30,1)-(34,55)              212          0    0.0    0.0     0.0    0.0
+ CAF:defaultUpdateSettings           Control.AutoUpdate       Control\AutoUpdate.hs:59:1-21           132          0    0.0    0.0     0.0    0.0
+  defaultUpdateSettings              Control.AutoUpdate       Control\AutoUpdate.hs:(59,1)-(63,5)     184          1    0.0    0.0     0.0    0.0
+ CAF:main1                           Main                     <no location info>                      120          0    0.0    0.0     0.0    0.0
+  main                               Main                     src\Main.hs:56:1-13                     166          1    0.0    0.0     0.0    0.0
+ bench1                              Main                     src\Main.hs:(47,1)-(53,12)              168          0    0.5    0.0   100.0  100.0
+  slog                               Main                     src\Main.hs:(41,1)-(44,20)              175          1   82.4   48.5    99.5  100.0
+   slog.msg'                         Main                     src\Main.hs:43:7-35                     186   10000000    0.3    0.0    16.8   51.5
+    buildMessage                     Main                     src\Main.hs:(37,1)-(38,73)              187   10000000   16.6   51.5    16.6   51.5
+   mkAutoUpdate                      Control.AutoUpdate       Control\AutoUpdate.hs:106:1-47          176          0    0.0    0.0     0.3    0.0
+    mkAutoUpdateHelper               Control.AutoUpdate       Control\AutoUpdate.hs:(117,1)-(195,35)  177          0    0.3    0.0     0.3    0.0
+  mkAutoUpdate                       Control.AutoUpdate       Control\AutoUpdate.hs:106:1-47          173          0    0.0    0.0     0.0    0.0
+   mkAutoUpdateHelper                Control.AutoUpdate       Control\AutoUpdate.hs:(117,1)-(195,35)  174          0    0.0    0.0     0.0    0.0
+    mkAutoUpdateHelper.fillRefOnExit Control.AutoUpdate       Control\AutoUpdate.hs:(136,9)-(144,81)  178          1    0.0    0.0     0.0    0.0
+     mkAutoUpdateHelper.loop         Control.AutoUpdate       Control\AutoUpdate.hs:(160,13)-(180,42) 180         37    0.0    0.0     0.0    0.0
+      catchSome                      Control.AutoUpdate       Control\AutoUpdate.hs:201:1-87          181         38    0.0    0.0     0.0    0.0
+    mkAutoUpdateHelper.loop          Control.AutoUpdate       Control\AutoUpdate.hs:(160,13)-(180,42) 179          1    0.0    0.0     0.0    0.0
+     updateFreq                      Control.AutoUpdate       Control\AutoUpdate.hs:76:7-16           185         38    0.0    0.0     0.0    0.0
+     updateAction                    Control.AutoUpdate       Control\AutoUpdate.hs:93:7-18           182          1    0.0    0.0     0.0    0.0

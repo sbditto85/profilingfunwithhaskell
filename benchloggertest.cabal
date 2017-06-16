@@ -1,0 +1,27 @@
+name:                benchloggertest
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/githubuser/benchloggertest#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2017 Author name here
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+extra-source-files:  README.md
+
+executable benchloggertest
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  default-language:    Haskell2010
+  ghc-options:         -Wall -rtsopts
+  build-depends:       auto-update
+                     , base >= 4.7 && < 5
+                     , fast-logger
+                     , mtl
+                     , old-locale
+                     , text
+                     , time

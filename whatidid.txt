@@ -1,0 +1,1518 @@
+* put in stack project
+* added dependencies
+** mtl
+** old-locale
+** time
+* compiled and ran normally
+** time:
+$ time stack exec -- benchloggertest.exe
+real    1m17.979s
+user    0m0.000s
+sys     0m0.000s
+* compiled with profiling and ran with +RTS -p
+** time:
+$ time stack exec -- benchloggertest.exe +RTS -p
+real    1m50.782s
+user    0m0.000s
+sys     0m0.000s
+** prog.prof
+didn't work :(
+* add -prof -fprof-auto -rtsopts -Wall to ghc options in cabal file
+** not sure where prof report is going or if im doing it right
+* ran hlint
+$ stack exec -- hlint.exe src --report
+src\Main.hs:28:16: Suggestion: Redundant bracket
+Found:
+  (show GREEN) ++ "  o  " ++ (show RESET)
+Why not:
+  show GREEN ++ "  o  " ++ (show RESET)
+
+src\Main.hs:28:33: Suggestion: Redundant bracket
+Found:
+  "  o  " ++ (show RESET)
+Why not:
+  "  o  " ++ show RESET
+
+src\Main.hs:29:16: Suggestion: Redundant bracket
+Found:
+  (show BLUE) ++ "  o  " ++ (show RESET)
+Why not:
+  show BLUE ++ "  o  " ++ (show RESET)
+
+src\Main.hs:29:33: Suggestion: Redundant bracket
+Found:
+  "  o  " ++ (show RESET)
+Why not:
+  "  o  " ++ show RESET
+
+src\Main.hs:30:16: Suggestion: Redundant bracket
+Found:
+  (show YELLOW) ++ "  o  " ++ (show RESET)
+Why not:
+  show YELLOW ++ "  o  " ++ (show RESET)
+
+src\Main.hs:30:33: Suggestion: Redundant bracket
+Found:
+  "  o  " ++ (show RESET)
+Why not:
+  "  o  " ++ show RESET
+
+src\Main.hs:31:16: Suggestion: Redundant bracket
+Found:
+  (show RED) ++ "  o  " ++ (show RESET)
+Why not:
+  show RED ++ "  o  " ++ (show RESET)
+
+src\Main.hs:31:33: Suggestion: Redundant bracket
+Found:
+  "  o  " ++ (show RESET)
+Why not:
+  "  o  " ++ show RESET
+
+src\Main.hs:32:16: Suggestion: Redundant bracket
+Found:
+  (show PURPLE) ++ "  o  " ++ (show RESET)
+Why not:
+  show PURPLE ++ "  o  " ++ (show RESET)
+
+src\Main.hs:32:33: Suggestion: Redundant bracket
+Found:
+  "  o  " ++ (show RESET)
+Why not:
+  "  o  " ++ show RESET
+
+src\Main.hs:37:14: Suggestion: Redundant bracket
+Found:
+  (show now) ++ " || [" ++ (show lvl) ++ "]" ++ (splotch lvl) ++ msg
+Why not:
+  show now ++ " || [" ++ (show lvl) ++ "]" ++ (splotch lvl) ++ msg
+
+src\Main.hs:37:39: Suggestion: Redundant bracket
+Found:
+  (show lvl) ++ "]" ++ (splotch lvl) ++ msg
+Why not:
+  show lvl ++ "]" ++ (splotch lvl) ++ msg
+
+src\Main.hs:37:60: Suggestion: Redundant bracket
+Found:
+  (splotch lvl) ++ msg
+Why not:
+  splotch lvl ++ msg
+
+src\Main.hs:40:18: Suggestion: Redundant bracket
+Found:
+  (buildMessage lvl msg) >>= (hPutStrLn f)
+Why not:
+  buildMessage lvl msg >>= (hPutStrLn f)
+
+src\Main.hs:40:18: Suggestion: Redundant bracket
+Found:
+  (buildMessage lvl msg) >>= (hPutStrLn f)
+Why not:
+  (buildMessage lvl msg) >>= hPutStrLn f
+
+Writing report to report.html ...
+15 hints
+* remove the ghc options -prof -fprof-auto -rtsopts
+* stack clean
+* stack build --profile
+** warnings
+C:\Users\sbditto85\Documents\haskell\benchloggertest\src\Main.hs:4:1: warning: [-Wunused-imports]
+    The import of `Data.List' is redundant
+      except perhaps to import instances from `Data.List'
+    To import instances alone, use: import Data.List()
+
+C:\Users\sbditto85\Documents\haskell\benchloggertest\src\Main.hs:6:1: warning: [-Wunused-imports]
+    The import of `Data.Time.Format' is redundant
+      except perhaps to import instances from `Data.Time.Format'
+    To import instances alone, use: import Data.Time.Format()
+
+C:\Users\sbditto85\Documents\haskell\benchloggertest\src\Main.hs:8:1: warning: [-Wunused-imports]
+    The import of `System.Locale' is redundant
+      except perhaps to import instances from `System.Locale'
+    To import instances alone, use: import System.Locale()
+
+C:\Users\sbditto85\Documents\haskell\benchloggertest\src\Main.hs:42:1: warning: [-Wmissing-signatures]
+    Top-level binding with no type signature: bench1 :: IO ()
+
+C:\Users\sbditto85\Documents\haskell\benchloggertest\src\Main.hs:47:1: warning: [-Wmissing-signatures]
+    Top-level binding with no type signature: main :: IO ()
+* run with profiling:
+$ time stack exec -- benchloggertest.exe +RTS -p
+real    1m43.655s
+user    0m0.000s
+sys     0m0.000s
+** no files created :(
+* run with statistics
+$ time stack exec -- benchloggertest.exe +RTS -sstderr
+real    1m49.214s
+user    0m0.000s
+sys     0m0.015s
+** no files created
+* run without time command
+$ stack exec -- benchloggertest.exe +RTS -sstderr
+** no files created
+* seems to be a problem on windows 10 https://github.com/commercialhaskell/stack/issues/2022
+* run with --rts-options
+$ stack exec --rts-options -p -- benchloggertest.exe
+** file created!
+** benchloggertest.prof
+        Thu Jun 15 02:22 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =       91.88 secs   (91883 ticks @ 1000 us, 1 processor)
+        total alloc = 145,134,722,248 bytes  (excludes profiling overheads)
+
+COST CENTRE  MODULE SRC                         %time %alloc
+
+buildMessage Main   src\Main.hs:(35,1)-(37,79)   85.1   93.2
+slog         Main   src\Main.hs:40:1-57          14.4    6.8
+
+
+                                                                                                    individual      inherited
+COST CENTRE              MODULE                       SRC                        no.     entries  %time %alloc   %time %alloc
+
+MAIN                     MAIN                         <built-in>                  67          0    0.0    0.0   100.0  100.0
+ CAF                     GHC.IO.Encoding.CodePage     <entire-module>            118          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.FD                    <entire-module>            114          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Encoding              <entire-module>            113          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.Text           <entire-module>            108          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.FD             <entire-module>            103          0    0.0    0.0     0.0    0.0
+ CAF                     Data.Time.LocalTime.TimeZone <entire-module>            100          0    0.0    0.0     0.0    0.0
+ CAF                     Data.Time.Clock.POSIX        <entire-module>             99          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2        Main                         <no location info>          74          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(12,5)-(17,27) 152          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7        Main                         <no location info>          79          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(12,5)-(17,27) 148          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6 Main                         <no location info>          84          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(21,5)-(25,26) 144          0    0.0    0.0     0.0    0.0
+ CAF:bench12             Main                         <no location info>          87          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 146          0    0.0    0.0     0.0    0.0
+   show                  Main                         src\Main.hs:(12,5)-(17,27) 147          1    0.0    0.0     0.0    0.0
+ CAF:bench13             Main                         <no location info>          92          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 137          0    0.0    0.0     0.0    0.0
+ CAF:bench2              Main                         <no location info>          95          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 135          1    0.0    0.0     0.0    0.0
+ CAF:bench3              Main                         <no location info>          94          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 139          0    0.0    0.0     0.0    0.0
+   slog                  Main                         src\Main.hs:40:1-57        140          0    0.0    0.0     0.0    0.0
+    buildMessage         Main                         src\Main.hs:(35,1)-(37,79) 141          1    0.0    0.0     0.0    0.0
+ CAF:bench4              Main                         <no location info>          93          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 153          0    0.0    0.0     0.0    0.0
+ CAF:bench7              Main                         <no location info>          86          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 149          0    0.0    0.0     0.0    0.0
+ CAF:bench8              Main                         <no location info>          85          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 150          0    0.0    0.0     0.0    0.0
+   show                  Main                         src\Main.hs:(12,5)-(17,27) 151          1    0.0    0.0     0.0    0.0
+ CAF:main1               Main                         <no location info>          97          0    0.0    0.0     0.0    0.0
+  main                   Main                         src\Main.hs:47:1-13        134          1    0.0    0.0     0.0    0.0
+ bench1                  Main                         src\Main.hs:(42,1)-(45,12) 136          0    0.3    0.0   100.0  100.0
+  slog                   Main                         src\Main.hs:40:1-57        138          1   14.4    6.8    99.7  100.0
+   buildMessage          Main                         src\Main.hs:(35,1)-(37,79) 142          0   85.1   93.2    85.3   93.2
+    show                 Main                         src\Main.hs:(21,5)-(25,26) 143   10000000    0.1    0.0     0.1    0.0
+    splotch              Main                         src\Main.hs:(28,1)-(32,55) 145   10000000    0.1    0.0     0.1    0.0
+* tried to get stats
+$ stack exec --rts-options -sstderr -- benchloggertest.exe
+benchloggertest.exe: Most RTS options are disabled. Link with -rtsopts to enable them.
+* added rts-options to ghc options
+* clean and build
+* try and get stats
+$ stack exec --rts-options -sstderr -- benchloggertest.exe
+ 127,678,700,576 bytes allocated in the heap
+      81,718,296 bytes copied during GC
+          60,408 bytes maximum residency (2 sample(s))
+          18,208 bytes maximum slop
+               1 MB total memory in use (0 MB lost due to fragmentation)
+
+                                     Tot time (elapsed)  Avg pause  Max pause
+  Gen  0     247128 colls,     0 par    0.453s   0.563s     0.0000s    0.0001s
+  Gen  1         2 colls,     0 par    0.000s   0.000s     0.0002s    0.0003s
+
+  INIT    time    0.000s  (  0.000s elapsed)
+  MUT     time   57.719s  ( 64.475s elapsed)
+  GC      time    0.453s  (  0.563s elapsed)
+  EXIT    time    0.000s  (  0.000s elapsed)
+  Total   time   58.172s  ( 65.039s elapsed)
+
+  %GC     time       0.8%  (0.9% elapsed)
+
+  Alloc rate    2,212,083,604 bytes per MUT second
+
+  Productivity  99.2% of total user, 99.1% of total elapsed
+* added cost center
+** now <- {-# SCC "getCurrentTime" #-} getCurrentTime
+** build and run with profiling
+** must of messed up as profile looks the same
+** clean and build again and it worked ... go figure
+$ cat benchloggertest.prof
+        Thu Jun 15 13:28 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =       88.98 secs   (88981 ticks @ 1000 us, 1 processor)
+        total alloc = 145,015,160,208 bytes  (excludes profiling overheads)
+
+COST CENTRE  MODULE SRC                         %time %alloc
+
+buildMessage Main   src\Main.hs:(35,1)-(37,79)   84.6   93.2
+slog         Main   src\Main.hs:40:1-57          15.1    6.8
+
+
+                                                                                                    individual      inherited
+COST CENTRE              MODULE                       SRC                        no.     entries  %time %alloc   %time %alloc
+
+MAIN                     MAIN                         <built-in>                  67          0    0.0    0.0   100.0  100.0
+ CAF                     GHC.IO.Encoding.CodePage     <entire-module>            118          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.FD                    <entire-module>            114          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Encoding              <entire-module>            113          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.Text           <entire-module>            108          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.FD             <entire-module>            103          0    0.0    0.0     0.0    0.0
+ CAF                     Data.Time.LocalTime.TimeZone <entire-module>            100          0    0.0    0.0     0.0    0.0
+ CAF                     Data.Time.Clock.POSIX        <entire-module>             99          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2        Main                         <no location info>          74          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(12,5)-(17,27) 153          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7        Main                         <no location info>          79          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(12,5)-(17,27) 149          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6 Main                         <no location info>          84          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(21,5)-(25,26) 145          0    0.0    0.0     0.0    0.0
+ CAF:bench12             Main                         <no location info>          87          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 147          0    0.0    0.0     0.0    0.0
+   show                  Main                         src\Main.hs:(12,5)-(17,27) 148          1    0.0    0.0     0.0    0.0
+ CAF:bench13             Main                         <no location info>          92          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 137          0    0.0    0.0     0.0    0.0
+ CAF:bench2              Main                         <no location info>          95          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 135          1    0.0    0.0     0.0    0.0
+ CAF:bench3              Main                         <no location info>          94          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 139          0    0.0    0.0     0.0    0.0
+   slog                  Main                         src\Main.hs:40:1-57        140          0    0.0    0.0     0.0    0.0
+    buildMessage         Main                         src\Main.hs:(35,1)-(37,79) 141          1    0.0    0.0     0.0    0.0
+ CAF:bench4              Main                         <no location info>          93          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 154          0    0.0    0.0     0.0    0.0
+ CAF:bench7              Main                         <no location info>          86          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 150          0    0.0    0.0     0.0    0.0
+ CAF:bench8              Main                         <no location info>          85          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 151          0    0.0    0.0     0.0    0.0
+   show                  Main                         src\Main.hs:(12,5)-(17,27) 152          1    0.0    0.0     0.0    0.0
+ CAF:main1               Main                         <no location info>          97          0    0.0    0.0     0.0    0.0
+  main                   Main                         src\Main.hs:47:1-13        134          1    0.0    0.0     0.0    0.0
+ bench1                  Main                         src\Main.hs:(42,1)-(45,12) 136          0    0.2    0.0   100.0  100.0
+  slog                   Main                         src\Main.hs:40:1-57        138          1   15.1    6.8    99.8  100.0
+   buildMessage          Main                         src\Main.hs:(35,1)-(37,79) 142          0   84.6   93.2    84.8   93.2
+    getCurrentTime       Main                         src\Main.hs:36:41-54       143   10000000    0.0    0.0     0.0    0.0
+    show                 Main                         src\Main.hs:(21,5)-(25,26) 144   10000000    0.1    0.0     0.1    0.0
+    splotch              Main                         src\Main.hs:(28,1)-(32,55) 146   10000000    0.1    0.0     0.1    0.0
+** hum doens't seem to care about getCurrentTime? (what others have said is the prob)
+* switching String to Text
+** build and profile
+$ cat benchloggertest.prof
+        Thu Jun 15 13:47 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =      138.39 secs   (138390 ticks @ 1000 us, 1 processor)
+        total alloc = 220,123,469,872 bytes  (excludes profiling overheads)
+
+COST CENTRE                  MODULE                    SRC                                             %time %alloc
+
+buildMessage                 Main                      src\Main.hs:(39,1)-(41,137)                      77.5   71.1
+hPutStr.str                  Data.Text.IO              Data\Text\IO.hs:179:7-20                          5.7   18.2
+writeBlocksCRLF.outer.inner  Data.Text.IO              Data\Text\IO.hs:(230,5)-(238,61)                  5.0    0.0
+writeBlocksCRLF.outer.commit Data.Text.IO              Data\Text\IO.hs:239:5-35                          4.8    3.3
+writeBlocksCRLF.outer        Data.Text.IO              Data\Text\IO.hs:(228,3)-(239,35)                  1.9    0.2
+hPutStrLn                    Data.Text.IO              Data\Text\IO.hs:285:1-46                          1.6    2.7
+unstream/resize              Data.Text.Internal.Fusion Data\Text\Internal\Fusion.hs:(110,62)-(114,50)    1.5    2.5
+
+
+                                                                                                                                       individual      inherited
+COST CENTRE                          MODULE                          SRC                                            no.     entries  %time %alloc   %time %alloc
+
+MAIN                                 MAIN                            <built-in>                                     444          0    0.0    0.0   100.0  100.0
+ CAF                                 GHC.IO.Encoding.CodePage        <entire-module>                                878          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.FD                       <entire-module>                                872          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Encoding                 <entire-module>                                871          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.FD                <entire-module>                                855          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.LocalTime.TimeZone    <entire-module>                                520          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.POSIX           <entire-module>                                519          0    0.0    0.0     0.0    0.0
+ CAF:$fIsStringText_$cfromString     Data.Text                       Data\Text.hs:353:5-14                          548          0    0.0    0.0     0.0    0.0
+  fromString                         Data.Text                       Data\Text.hs:353:5-21                          902          1    0.0    0.0     0.0    0.0
+ CAF:$fNumSize_$c+                   Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-7       832          0    0.0    0.0     0.0    0.0
+  +                                  Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-17      911          1    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                    Main                            <no location info>                             451          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                     952          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                    Main                            <no location info>                             456          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                     930          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6             Main                            <no location info>                             461          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(25,5)-(29,26)                     913          0    0.0    0.0     0.0    0.0
+ CAF:bench2                          Main                            <no location info>                             515          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(46,1)-(49,12)                     889          1    0.0    0.0     0.0    0.0
+ CAF:bench3                          Main                            <no location info>                             514          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(46,1)-(49,12)                     957          0    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 961          2    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     964          4    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     962          4    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     963          2    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     958          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     959          1    0.0    0.0     0.0    0.0
+ CAF:bench4                          Main                            <no location info>                             513          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(46,1)-(49,12)                     960          0    0.0    0.0     0.0    0.0
+ CAF:bench7                          Main                            <no location info>                             512          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(46,1)-(49,12)                     891          0    0.0    0.0     0.0    0.0
+ CAF:lvl1_r7ic                       Main                            <no location info>                             507          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(41,137)                    901          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     903          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     904          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 906          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     909          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     907          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     908          1    0.0    0.0     0.0    0.0
+ CAF:lvl2_r7id                       Main                            <no location info>                             508          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(41,137)                    900          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     910          1    0.0    0.0     0.0    0.0
+ CAF:lvl3_r7ie                       Main                            <no location info>                             509          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(41,137)                    918          0    0.0    0.0     0.0    0.0
+ CAF:lvl4_r7if                       Main                            <no location info>                             510          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(41,137)                    915          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     916          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     917          1    0.0    0.0     0.0    0.0
+ CAF:lvl5_r7ig                       Main                            <no location info>                             511          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(41,137)                    914          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     919          1    0.0    0.0     0.0    0.0
+ CAF:lvl_r7ib                        Main                            <no location info>                             506          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(41,137)                    905          0    0.0    0.0     0.0    0.0
+ CAF:main1                           Main                            <no location info>                             517          0    0.0    0.0     0.0    0.0
+  main                               Main                            src\Main.hs:51:1-13                            888          1    0.0    0.0     0.0    0.0
+ CAF:splotch10                       Main                            <no location info>                             466          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     937          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     938          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     939          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 941          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     944          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     942          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     943          1    0.0    0.0     0.0    0.0
+ CAF:splotch11                       Main                            <no location info>                             465          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     940          0    0.0    0.0     0.0    0.0
+ CAF:splotch46                       Main                            <no location info>                             473          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     921          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     954          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     955          1    0.0    0.0     0.0    0.0
+ CAF:splotch47                       Main                            <no location info>                             472          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     922          0    0.0    0.0     0.0    0.0
+ CAF:splotch48                       Main                            <no location info>                             471          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     946          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     953          1    0.0    0.0     0.0    0.0
+ CAF:splotch49                       Main                            <no location info>                             470          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     947          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     948          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     949          1    0.0    0.0     0.0    0.0
+ CAF:splotch51                       Main                            <no location info>                             468          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     923          0    0.0    0.0     0.0    0.0
+ CAF:splotch52                       Main                            <no location info>                             464          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     924          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     935          1    0.0    0.0     0.0    0.0
+ CAF:splotch53                       Main                            <no location info>                             463          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     925          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     926          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     927          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 931          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     934          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     932          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     933          1    0.0    0.0     0.0    0.0
+ CAF:splotch55                       Main                            <no location info>                             462          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     928          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                     929          1    0.0    0.0     0.0    0.0
+ CAF:splotch6                        Main                            <no location info>                             469          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     950          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                     951          1    0.0    0.0     0.0    0.0
+ CAF:splotch9                        Main                            <no location info>                             467          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     936          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     945          1    0.0    0.0     0.0    0.0
+ bench1                              Main                            src\Main.hs:(46,1)-(49,12)                     890          0    0.1    0.0   100.0  100.0
+  slog                               Main                            src\Main.hs:44:1-61                            892          1    0.2    0.1    99.9  100.0
+   buildMessage                      Main                            src\Main.hs:(39,1)-(41,137)                    893   10000000   77.5   71.1    79.0   73.6
+    unstream/resize                  Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 966   40000000    1.5    2.5     1.5    2.5
+     maBA                            Data.Text.Array                 Data\Text\Array.hs:92:7-10                     968   80000000    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     967   80000000    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     956   30000000    0.0    0.0     0.0    0.0
+    getCurrentTime                   Main                            src\Main.hs:40:41-54                           894   10000000    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     965   10000000    0.0    0.0     0.0    0.0
+    show                             Main                            src\Main.hs:(25,5)-(29,26)                     912   10000000    0.0    0.0     0.0    0.0
+    splotch                          Main                            src\Main.hs:(32,1)-(36,89)                     920   10000000    0.0    0.0     0.0    0.0
+   hPutStrLn                         Data.Text.IO                    Data\Text\IO.hs:285:1-46                       895   10000000    1.6    2.7    20.7   26.3
+    hPutStr                          Data.Text.IO                    Data\Text\IO.hs:(174,1)-(185,56)               896   10000000    0.9    0.8    19.1   23.5
+     hPutStr.\                       Data.Text.IO                    Data\Text\IO.hs:(176,48)-(178,50)              897   10000000    0.2    0.2     0.6    0.9
+      getSpareBuffer                 Data.Text.IO                    Data\Text\IO.hs:(257,1)-(272,38)               898   10000000    0.4    0.7     0.4    0.7
+     hPutStr.str                     Data.Text.IO                    Data\Text\IO.hs:179:7-20                       899   10000000    0.2    0.4     0.2    0.4
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     969   10000000    0.0    0.0     0.0    0.0
+     writeBlocksCRLF                 Data.Text.IO                    Data\Text\IO.hs:(226,1)-(239,35)               970   10000000    0.2    0.2    17.4   21.4
+      writeBlocksCRLF.outer          Data.Text.IO                    Data\Text\IO.hs:(228,3)-(239,35)               971   10000000    1.9    0.2    17.2   21.3
+       writeBlocksCRLF.outer.inner   Data.Text.IO                    Data\Text\IO.hs:(230,5)-(238,61)               972  708909571    5.0    0.0    15.3   21.1
+        writeBlocksCRLF.outer.commit Data.Text.IO                    Data\Text\IO.hs:239:5-35                       974   10000000    4.8    3.3     4.8    3.3
+        hPutStr.str                  Data.Text.IO                    Data\Text\IO.hs:179:7-20                       973          0    5.5   17.8     5.5   17.8
+** seemed to have gotten slower?? but also seems that the biggest problem is in putting the stuff in the file not anything else?
+* added the cost center of combining the message together
+** clean and build and profile
+        Thu Jun 15 13:55 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =      134.55 secs   (134553 ticks @ 1000 us, 1 processor)
+        total alloc = 219,865,859,816 bytes  (excludes profiling overheads)
+
+COST CENTRE                  MODULE                    SRC                                             %time %alloc
+
+ccccooombbine                Main                      src\Main.hs:41:44-167                            64.7   65.1
+buildMessage                 Main                      src\Main.hs:(39,1)-(42,17)                       12.6    6.0
+hPutStr.str                  Data.Text.IO              Data\Text\IO.hs:179:7-20                          5.8   18.2
+writeBlocksCRLF.outer.inner  Data.Text.IO              Data\Text\IO.hs:(230,5)-(238,61)                  5.3    0.0
+writeBlocksCRLF.outer.commit Data.Text.IO              Data\Text\IO.hs:239:5-35                          4.5    3.3
+writeBlocksCRLF.outer        Data.Text.IO              Data\Text\IO.hs:(228,3)-(239,35)                  1.9    0.2
+hPutStrLn                    Data.Text.IO              Data\Text\IO.hs:285:1-46                          1.6    2.7
+unstream/resize              Data.Text.Internal.Fusion Data\Text\Internal\Fusion.hs:(110,62)-(114,50)    1.5    2.5
+
+
+                                                                                                                                       individual      inherited
+COST CENTRE                          MODULE                          SRC                                            no.     entries  %time %alloc   %time %alloc
+
+MAIN                                 MAIN                            <built-in>                                     444          0    0.0    0.0   100.0  100.0
+ CAF                                 GHC.IO.Encoding.CodePage        <entire-module>                                878          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.FD                       <entire-module>                                872          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Encoding                 <entire-module>                                871          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.FD                <entire-module>                                855          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.LocalTime.TimeZone    <entire-module>                                520          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.POSIX           <entire-module>                                519          0    0.0    0.0     0.0    0.0
+ CAF:$fIsStringText_$cfromString     Data.Text                       Data\Text.hs:353:5-14                          548          0    0.0    0.0     0.0    0.0
+  fromString                         Data.Text                       Data\Text.hs:353:5-21                          908          1    0.0    0.0     0.0    0.0
+ CAF:$fNumSize_$c+                   Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-7       832          0    0.0    0.0     0.0    0.0
+  +                                  Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-17      919          1    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                    Main                            <no location info>                             451          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                     966          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                    Main                            <no location info>                             456          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                     944          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6             Main                            <no location info>                             461          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(25,5)-(29,26)                     921          0    0.0    0.0     0.0    0.0
+ CAF:bench2                          Main                            <no location info>                             515          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(47,1)-(50,12)                     889          1    0.0    0.0     0.0    0.0
+ CAF:bench3                          Main                            <no location info>                             514          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(47,1)-(50,12)                     971          0    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 975          2    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     978          4    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     976          4    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     977          2    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     972          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     973          1    0.0    0.0     0.0    0.0
+ CAF:bench4                          Main                            <no location info>                             513          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(47,1)-(50,12)                     974          0    0.0    0.0     0.0    0.0
+ CAF:bench7                          Main                            <no location info>                             512          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(47,1)-(50,12)                     891          0    0.0    0.0     0.0    0.0
+ CAF:lvl1_r7iz                       Main                            <no location info>                             507          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(42,17)                     905          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:41:9-167                           906          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:41:44-167                          907          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     909          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     910          1    0.0    0.0     0.0    0.0
+     unstream/resize                 Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 914          1    0.0    0.0     0.0    0.0
+      maBA                           Data.Text.Array                 Data\Text\Array.hs:92:7-10                     917          2    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     915          2    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     916          1    0.0    0.0     0.0    0.0
+ CAF:lvl2_r7iA                       Main                            <no location info>                             508          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(42,17)                     902          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:41:9-167                           903          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:41:44-167                          904          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     918          1    0.0    0.0     0.0    0.0
+ CAF:lvl3_r7iB                       Main                            <no location info>                             509          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(42,17)                     930          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:41:9-167                           931          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:41:44-167                          932          0    0.0    0.0     0.0    0.0
+ CAF:lvl4_r7iC                       Main                            <no location info>                             510          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(42,17)                     925          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:41:9-167                           926          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:41:44-167                          927          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     928          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     929          1    0.0    0.0     0.0    0.0
+ CAF:lvl5_r7iD                       Main                            <no location info>                             511          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(42,17)                     922          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:41:9-167                           923          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:41:44-167                          924          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     933          1    0.0    0.0     0.0    0.0
+ CAF:lvl_r7iy                        Main                            <no location info>                             506          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(42,17)                     911          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:41:9-167                           912          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:41:44-167                          913          0    0.0    0.0     0.0    0.0
+ CAF:main1                           Main                            <no location info>                             517          0    0.0    0.0     0.0    0.0
+  main                               Main                            src\Main.hs:52:1-13                            888          1    0.0    0.0     0.0    0.0
+ CAF:splotch10                       Main                            <no location info>                             466          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     951          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     952          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     953          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 955          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     958          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     956          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     957          1    0.0    0.0     0.0    0.0
+ CAF:splotch11                       Main                            <no location info>                             465          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     954          0    0.0    0.0     0.0    0.0
+ CAF:splotch46                       Main                            <no location info>                             473          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     935          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     968          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     969          1    0.0    0.0     0.0    0.0
+ CAF:splotch47                       Main                            <no location info>                             472          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     936          0    0.0    0.0     0.0    0.0
+ CAF:splotch48                       Main                            <no location info>                             471          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     960          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     967          1    0.0    0.0     0.0    0.0
+ CAF:splotch49                       Main                            <no location info>                             470          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     961          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     962          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     963          1    0.0    0.0     0.0    0.0
+ CAF:splotch51                       Main                            <no location info>                             468          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     937          0    0.0    0.0     0.0    0.0
+ CAF:splotch52                       Main                            <no location info>                             464          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     938          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     949          1    0.0    0.0     0.0    0.0
+ CAF:splotch53                       Main                            <no location info>                             463          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     939          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     940          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     941          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 945          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     948          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     946          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     947          1    0.0    0.0     0.0    0.0
+ CAF:splotch55                       Main                            <no location info>                             462          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     942          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                     943          1    0.0    0.0     0.0    0.0
+ CAF:splotch6                        Main                            <no location info>                             469          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     964          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                     965          1    0.0    0.0     0.0    0.0
+ CAF:splotch9                        Main                            <no location info>                             467          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                     950          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     959          1    0.0    0.0     0.0    0.0
+ bench1                              Main                            src\Main.hs:(47,1)-(50,12)                     890          0    0.1    0.0   100.0  100.0
+  slog                               Main                            src\Main.hs:45:1-61                            892          1    0.2    0.1    99.9  100.0
+   buildMessage                      Main                            src\Main.hs:(39,1)-(42,17)                     893   10000000   12.6    6.0    78.9   73.6
+    buildMessage.msg'                Main                            src\Main.hs:41:9-167                           900   10000000    0.0    0.0    66.3   67.6
+     ccccooombbine                   Main                            src\Main.hs:41:44-167                          901   10000000   64.7   65.1    66.2   67.6
+      unstream/resize                Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 980   40000000    1.5    2.5     1.5    2.5
+       maBA                          Data.Text.Array                 Data\Text\Array.hs:92:7-10                     982   80000000    0.0    0.0     0.0    0.0
+       shiftL                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     981   80000000    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     970   30000000    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     979   10000000    0.0    0.0     0.0    0.0
+      show                           Main                            src\Main.hs:(25,5)-(29,26)                     920   10000000    0.0    0.0     0.0    0.0
+      splotch                        Main                            src\Main.hs:(32,1)-(36,89)                     934   10000000    0.0    0.0     0.0    0.0
+    getCurrentTime                   Main                            src\Main.hs:40:41-54                           894   10000000    0.0    0.0     0.0    0.0
+   hPutStrLn                         Data.Text.IO                    Data\Text\IO.hs:285:1-46                       895   10000000    1.6    2.7    20.8   26.3
+    hPutStr                          Data.Text.IO                    Data\Text\IO.hs:(174,1)-(185,56)               896   10000000    1.0    0.8    19.2   23.6
+     hPutStr.\                       Data.Text.IO                    Data\Text\IO.hs:(176,48)-(178,50)              897   10000000    0.2    0.2     0.6    0.9
+      getSpareBuffer                 Data.Text.IO                    Data\Text\IO.hs:(257,1)-(272,38)               898   10000000    0.3    0.7     0.3    0.7
+     hPutStr.str                     Data.Text.IO                    Data\Text\IO.hs:179:7-20                       899   10000000    0.2    0.4     0.2    0.4
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     983   10000000    0.0    0.0     0.0    0.0
+     writeBlocksCRLF                 Data.Text.IO                    Data\Text\IO.hs:(226,1)-(239,35)               984   10000000    0.2    0.2    17.5   21.5
+      writeBlocksCRLF.outer          Data.Text.IO                    Data\Text\IO.hs:(228,3)-(239,35)               985   10000000    1.9    0.2    17.3   21.3
+       writeBlocksCRLF.outer.inner   Data.Text.IO                    Data\Text\IO.hs:(230,5)-(238,61)               986  708887080    5.3    0.0    15.4   21.1
+        writeBlocksCRLF.outer.commit Data.Text.IO                    Data\Text\IO.hs:239:5-35                       988   10000000    4.5    3.3     4.5    3.3
+        hPutStr.str                  Data.Text.IO                    Data\Text\IO.hs:179:7-20                       987          0    5.5   17.8     5.5   17.8
+* changing the buildMessage to allow for more cost centers etc and easier to read
+buildMessage :: MessageLevel -> Text -> IO Text
+buildMessage lvl msg = do
+    now <- {-# SCC "getCurrentTime" #-} getCurrentTime
+    let showingNow = {-# SCC "showingNow" #-} (T.pack $ show now)
+        showingLvl = {-# SCC "showingLvl" #-} (T.pack $ show lvl)
+        doSplotch = {-# SCC "doSplotch" #-} (splotch lvl)
+        msg' = {-# SCC "ccccooombbine" #-} showingNow `T.append` " || [" `T.append` showingLvl `T.append` "]" `T.append` doSplotch `T.append` msg
+    return $ msg'
+* clean and build and profile
+        Thu Jun 15 14:06 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =      144.44 secs   (144435 ticks @ 1000 us, 1 processor)
+        total alloc = 227,074,594,504 bytes  (excludes profiling overheads)
+
+COST CENTRE                  MODULE                    SRC                                             %time %alloc
+
+showingNow                   Main                      src\Main.hs:41:47-65                             41.0   38.7
+ccccooombbine                Main                      src\Main.hs:44:44-145                            19.9   27.6
+buildMessage                 Main                      src\Main.hs:(39,1)-(45,17)                       12.9    5.8
+hPutStr.str                  Data.Text.IO              Data\Text\IO.hs:179:7-20                          5.4   17.7
+writeBlocksCRLF.outer.commit Data.Text.IO              Data\Text\IO.hs:239:5-35                          4.8    3.2
+writeBlocksCRLF.outer.inner  Data.Text.IO              Data\Text\IO.hs:(230,5)-(238,61)                  4.7    0.0
+unstream/resize              Data.Text.Internal.Fusion Data\Text\Internal\Fusion.hs:(110,62)-(114,50)    4.6    2.0
+writeBlocksCRLF.outer        Data.Text.IO              Data\Text\IO.hs:(228,3)-(239,35)                  1.7    0.2
+hPutStrLn                    Data.Text.IO              Data\Text\IO.hs:285:1-46                          1.5    2.6
+
+
+                                                                                                                                        individual      inherited
+COST CENTRE                          MODULE                          SRC                                            no.      entries  %time %alloc   %time %alloc
+
+MAIN                                 MAIN                            <built-in>                                      444          0    0.0    0.0   100.0  100.0
+ CAF                                 GHC.IO.Encoding.CodePage        <entire-module>                                 878          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.FD                       <entire-module>                                 872          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Encoding                 <entire-module>                                 871          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.FD                <entire-module>                                 855          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.LocalTime.TimeZone    <entire-module>                                 520          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.POSIX           <entire-module>                                 519          0    0.0    0.0     0.0    0.0
+ CAF:$fIsStringText_$cfromString     Data.Text                       Data\Text.hs:353:5-14                           548          0    0.0    0.0     0.0    0.0
+  fromString                         Data.Text                       Data\Text.hs:353:5-21                           938          1    0.0    0.0     0.0    0.0
+ CAF:$fNumSize_$c+                   Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-7        832          0    0.0    0.0     0.0    0.0
+  +                                  Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-17       947          1    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                    Main                            <no location info>                              451          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                      954          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                    Main                            <no location info>                              456          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                      930          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6             Main                            <no location info>                              461          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(25,5)-(29,26)                      911          0    0.0    0.0     0.0    0.0
+ CAF:bench2                          Main                            <no location info>                              515          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(50,1)-(53,12)                      889          1    0.0    0.0     0.0    0.0
+ CAF:bench3                          Main                            <no location info>                              514          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(50,1)-(53,12)                      989          0    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  993          2    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      996          4    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      994          4    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      995          2    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      990          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      991          1    0.0    0.0     0.0    0.0
+ CAF:bench4                          Main                            <no location info>                              513          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(50,1)-(53,12)                      992          0    0.0    0.0     0.0    0.0
+ CAF:bench7                          Main                            <no location info>                              512          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(50,1)-(53,12)                      891          0    0.0    0.0     0.0    0.0
+ CAF:lvl1_r7op                       Main                            <no location info>                              507          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      964          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            965          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           966          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      967          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      968          1    0.0    0.0     0.0    0.0
+     unstream/resize                 Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  972          1    0.0    0.0     0.0    0.0
+      maBA                           Data.Text.Array                 Data\Text\Array.hs:92:7-10                      975          2    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      973          2    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      974          1    0.0    0.0     0.0    0.0
+ CAF:lvl2_r7oq                       Main                            <no location info>                              508          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      961          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            962          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           963          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      976          1    0.0    0.0     0.0    0.0
+ CAF:lvl3_r7or                       Main                            <no location info>                              509          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      985          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            986          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           987          0    0.0    0.0     0.0    0.0
+ CAF:lvl4_r7os                       Main                            <no location info>                              510          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      980          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            981          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           982          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      983          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      984          1    0.0    0.0     0.0    0.0
+ CAF:lvl5_r7ot                       Main                            <no location info>                              511          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      977          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            978          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           979          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      988          1    0.0    0.0     0.0    0.0
+ CAF:lvl_r7oo                        Main                            <no location info>                              506          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      969          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            970          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           971          0    0.0    0.0     0.0    0.0
+ CAF:main1                           Main                            <no location info>                              517          0    0.0    0.0     0.0    0.0
+  main                               Main                            src\Main.hs:55:1-13                             888          1    0.0    0.0     0.0    0.0
+ CAF:splotch10                       Main                            <no location info>                              466          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      937          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      939          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      940          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  942          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      945          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      943          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      944          1    0.0    0.0     0.0    0.0
+ CAF:splotch11                       Main                            <no location info>                              465          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      941          0    0.0    0.0     0.0    0.0
+ CAF:splotch46                       Main                            <no location info>                              473          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      921          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      956          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      957          1    0.0    0.0     0.0    0.0
+ CAF:splotch47                       Main                            <no location info>                              472          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      922          0    0.0    0.0     0.0    0.0
+ CAF:splotch48                       Main                            <no location info>                              471          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      948          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      955          1    0.0    0.0     0.0    0.0
+ CAF:splotch49                       Main                            <no location info>                              470          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      949          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      950          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      951          1    0.0    0.0     0.0    0.0
+ CAF:splotch51                       Main                            <no location info>                              468          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      923          0    0.0    0.0     0.0    0.0
+ CAF:splotch52                       Main                            <no location info>                              464          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      924          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      935          1    0.0    0.0     0.0    0.0
+ CAF:splotch53                       Main                            <no location info>                              463          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      925          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      926          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      927          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  931          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      934          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      932          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      933          1    0.0    0.0     0.0    0.0
+ CAF:splotch55                       Main                            <no location info>                              462          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      928          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                      929          1    0.0    0.0     0.0    0.0
+ CAF:splotch6                        Main                            <no location info>                              469          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      952          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                      953          1    0.0    0.0     0.0    0.0
+ CAF:splotch9                        Main                            <no location info>                              467          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      936          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      946          1    0.0    0.0     0.0    0.0
+ bench1                              Main                            src\Main.hs:(50,1)-(53,12)                      890          0    0.1    0.0   100.0  100.0
+  slog                               Main                            src\Main.hs:48:1-61                             892          1    0.2    0.1    99.9  100.0
+   buildMessage                      Main                            src\Main.hs:(39,1)-(45,17)                      893   10000000   12.9    5.8    79.9   74.4
+    buildMessage.doSplotch           Main                            src\Main.hs:43:9-57                             918   10000000    0.1    0.0     0.2    0.0
+     doSplotch                       Main                            src\Main.hs:43:45-57                            919   10000000    0.1    0.0     0.1    0.0
+      splotch                        Main                            src\Main.hs:(32,1)-(36,89)                      920   10000000    0.0    0.0     0.0    0.0
+    buildMessage.msg'                Main                            src\Main.hs:44:9-145                            958   10000000    0.1    0.0    20.0   27.6
+     ccccooombbine                   Main                            src\Main.hs:44:44-145                           959   10000000   19.9   27.6    19.9   27.6
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      960   50000000    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      997   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingLvl          Main                            src\Main.hs:42:9-65                             908   10000000    0.1    0.0     1.7    0.6
+     showingLvl                      Main                            src\Main.hs:42:47-65                            909   10000000    0.9    0.2     1.6    0.6
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      912   10000000    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      913   10000000    0.0    0.0     0.0    0.0
+      show                           Main                            src\Main.hs:(25,5)-(29,26)                      910   10000000    0.0    0.0     0.0    0.0
+      unstream/resize                Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  914   10000000    0.7    0.5     0.7    0.5
+       maBA                          Data.Text.Array                 Data\Text\Array.hs:92:7-10                      917   20000000    0.0    0.0     0.0    0.0
+       shiftL                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      915   20000000    0.0    0.0     0.0    0.0
+       shiftR                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      916   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingNow          Main                            src\Main.hs:41:9-65                             900   10000000    0.2    0.1    45.1   40.4
+     showingNow                      Main                            src\Main.hs:41:47-65                            901   10000000   41.0   38.7    44.9   40.3
+      unstream/resize                Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  904   30000000    3.9    1.5     4.0    1.5
+       maBA                          Data.Text.Array                 Data\Text\Array.hs:92:7-10                      907   60000000    0.0    0.0     0.0    0.0
+       shiftL                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      905   60000000    0.0    0.0     0.0    0.0
+       shiftR                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      906   30000000    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      902   10000000    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      903   10000000    0.0    0.0     0.0    0.0
+    getCurrentTime                   Main                            src\Main.hs:40:41-54                            894   10000000    0.0    0.0     0.0    0.0
+   hPutStrLn                         Data.Text.IO                    Data\Text\IO.hs:285:1-46                        895   10000000    1.5    2.6    19.7   25.5
+    hPutStr                          Data.Text.IO                    Data\Text\IO.hs:(174,1)-(185,56)                896   10000000    0.9    0.8    18.2   22.8
+     hPutStr.\                       Data.Text.IO                    Data\Text\IO.hs:(176,48)-(178,50)               897   10000000    0.2    0.2     0.6    0.8
+      getSpareBuffer                 Data.Text.IO                    Data\Text\IO.hs:(257,1)-(272,38)                898   10000000    0.4    0.6     0.4    0.6
+     hPutStr.str                     Data.Text.IO                    Data\Text\IO.hs:179:7-20                        899   10000000    0.3    0.4     0.3    0.4
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      998   10000000    0.0    0.0     0.0    0.0
+     writeBlocksCRLF                 Data.Text.IO                    Data\Text\IO.hs:(226,1)-(239,35)                999   10000000    0.2    0.2    16.5   20.8
+      writeBlocksCRLF.outer          Data.Text.IO                    Data\Text\IO.hs:(228,3)-(239,35)               1000   10000000    1.7    0.2    16.3   20.6
+       writeBlocksCRLF.outer.inner   Data.Text.IO                    Data\Text\IO.hs:(230,5)-(238,61)               1001  708891272    4.7    0.0    14.6   20.4
+        writeBlocksCRLF.outer.commit Data.Text.IO                    Data\Text\IO.hs:239:5-35                       1003   10000000    4.8    3.2     4.8    3.2
+        hPutStr.str                  Data.Text.IO                    Data\Text\IO.hs:179:7-20                       1002          0    5.1   17.2     5.1   17.2
+** seems that showingNow is the culprit :(
+* trying using getPOSIXTime instead of getCurrentTime
+** clean, build and profile
+time stack exec --rts-options -p -- benchloggertest.exe
+real    1m30.558s
+user    0m0.000s
+sys     0m0.015s
+** profile
+        Thu Jun 15 19:52 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =       78.71 secs   (78714 ticks @ 1000 us, 1 processor)
+        total alloc = 145,472,388,112 bytes  (excludes profiling overheads)
+
+COST CENTRE                  MODULE                    SRC                                             %time %alloc
+
+ccccooombbine                Main                      src\Main.hs:45:44-145                            29.9   35.1
+showingNow                   Main                      src\Main.hs:42:47-65                             25.1   24.9
+hPutStr.str                  Data.Text.IO              Data\Text\IO.hs:179:7-20                          8.0   22.9
+buildMessage                 Main                      src\Main.hs:(40,1)-(46,17)                        7.4    2.4
+writeBlocksCRLF.outer.inner  Data.Text.IO              Data\Text\IO.hs:(230,5)-(238,61)                  7.1    0.0
+writeBlocksCRLF.outer.commit Data.Text.IO              Data\Text\IO.hs:239:5-35                          6.7    5.0
+unstream/resize              Data.Text.Internal.Fusion Data\Text\Internal\Fusion.hs:(110,62)-(114,50)    5.3    2.1
+writeBlocksCRLF.outer        Data.Text.IO              Data\Text\IO.hs:(228,3)-(239,35)                  2.7    0.3
+hPutStrLn                    Data.Text.IO              Data\Text\IO.hs:285:1-46                          2.6    4.1
+showingLvl                   Main                      src\Main.hs:43:47-65                              1.4    0.3
+hPutStr                      Data.Text.IO              Data\Text\IO.hs:(174,1)-(185,56)                  1.4    1.2
+
+
+                                                                                                                                        individual      inherited
+COST CENTRE                          MODULE                          SRC                                            no.      entries  %time %alloc   %time %alloc
+
+MAIN                                 MAIN                            <built-in>                                      444          0    0.0    0.0   100.0  100.0
+ CAF                                 GHC.IO.Encoding.CodePage        <entire-module>                                 878          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.FD                       <entire-module>                                 872          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Encoding                 <entire-module>                                 871          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.FD                <entire-module>                                 855          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.POSIX           <entire-module>                                 520          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.UTC             <entire-module>                                 519          0    0.0    0.0     0.0    0.0
+ CAF:$fIsStringText_$cfromString     Data.Text                       Data\Text.hs:353:5-14                           548          0    0.0    0.0     0.0    0.0
+  fromString                         Data.Text                       Data\Text.hs:353:5-21                           938          1    0.0    0.0     0.0    0.0
+ CAF:$fNumSize_$c+                   Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-7        832          0    0.0    0.0     0.0    0.0
+  +                                  Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-17       947          1    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                    Main                            <no location info>                              451          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(17,5)-(22,27)                      954          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                    Main                            <no location info>                              456          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(17,5)-(22,27)                      930          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6             Main                            <no location info>                              461          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(26,5)-(30,26)                      911          0    0.0    0.0     0.0    0.0
+ CAF:bench2                          Main                            <no location info>                              515          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                      889          1    0.0    0.0     0.0    0.0
+ CAF:bench3                          Main                            <no location info>                              514          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                      989          0    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  993          2    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      996          4    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      994          4    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      995          2    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      990          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      991          1    0.0    0.0     0.0    0.0
+ CAF:bench4                          Main                            <no location info>                              513          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                      992          0    0.0    0.0     0.0    0.0
+ CAF:bench7                          Main                            <no location info>                              512          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                      891          0    0.0    0.0     0.0    0.0
+ CAF:lvl1_r76b                       Main                            <no location info>                              507          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(40,1)-(46,17)                      964          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:45:9-145                            965          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:45:44-145                           966          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      967          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      968          1    0.0    0.0     0.0    0.0
+     unstream/resize                 Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  972          1    0.0    0.0     0.0    0.0
+      maBA                           Data.Text.Array                 Data\Text\Array.hs:92:7-10                      975          2    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      973          2    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      974          1    0.0    0.0     0.0    0.0
+ CAF:lvl2_r76c                       Main                            <no location info>                              508          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(40,1)-(46,17)                      961          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:45:9-145                            962          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:45:44-145                           963          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      976          1    0.0    0.0     0.0    0.0
+ CAF:lvl3_r76d                       Main                            <no location info>                              509          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(40,1)-(46,17)                      985          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:45:9-145                            986          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:45:44-145                           987          0    0.0    0.0     0.0    0.0
+ CAF:lvl4_r76e                       Main                            <no location info>                              510          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(40,1)-(46,17)                      980          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:45:9-145                            981          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:45:44-145                           982          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      983          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      984          1    0.0    0.0     0.0    0.0
+ CAF:lvl5_r76f                       Main                            <no location info>                              511          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(40,1)-(46,17)                      977          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:45:9-145                            978          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:45:44-145                           979          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      988          1    0.0    0.0     0.0    0.0
+ CAF:lvl_r76a                        Main                            <no location info>                              506          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(40,1)-(46,17)                      969          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:45:9-145                            970          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:45:44-145                           971          0    0.0    0.0     0.0    0.0
+ CAF:main1                           Main                            <no location info>                              517          0    0.0    0.0     0.0    0.0
+  main                               Main                            src\Main.hs:56:1-13                             888          1    0.0    0.0     0.0    0.0
+ CAF:splotch10                       Main                            <no location info>                              466          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      937          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      939          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      940          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  942          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      945          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      943          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      944          1    0.0    0.0     0.0    0.0
+ CAF:splotch11                       Main                            <no location info>                              465          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      941          0    0.0    0.0     0.0    0.0
+ CAF:splotch46                       Main                            <no location info>                              473          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      921          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      956          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      957          1    0.0    0.0     0.0    0.0
+ CAF:splotch47                       Main                            <no location info>                              472          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      922          0    0.0    0.0     0.0    0.0
+ CAF:splotch48                       Main                            <no location info>                              471          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      948          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      955          1    0.0    0.0     0.0    0.0
+ CAF:splotch49                       Main                            <no location info>                              470          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      949          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      950          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      951          1    0.0    0.0     0.0    0.0
+ CAF:splotch51                       Main                            <no location info>                              468          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      923          0    0.0    0.0     0.0    0.0
+ CAF:splotch52                       Main                            <no location info>                              464          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      924          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      935          1    0.0    0.0     0.0    0.0
+ CAF:splotch53                       Main                            <no location info>                              463          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      925          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      926          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      927          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  931          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      934          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      932          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      933          1    0.0    0.0     0.0    0.0
+ CAF:splotch55                       Main                            <no location info>                              462          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      928          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(17,5)-(22,27)                      929          1    0.0    0.0     0.0    0.0
+ CAF:splotch6                        Main                            <no location info>                              469          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      952          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(17,5)-(22,27)                      953          1    0.0    0.0     0.0    0.0
+ CAF:splotch9                        Main                            <no location info>                              467          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      936          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      946          1    0.0    0.0     0.0    0.0
+ bench1                              Main                            src\Main.hs:(51,1)-(54,12)                      890          0    0.1    0.0   100.0  100.0
+  slog                               Main                            src\Main.hs:49:1-61                             892          1    0.4    0.2    99.9  100.0
+   buildMessage                      Main                            src\Main.hs:(40,1)-(46,17)                      893   10000000    7.4    2.4    69.9   64.7
+    buildMessage.doSplotch           Main                            src\Main.hs:44:9-57                             918   10000000    0.1    0.0     0.3    0.0
+     doSplotch                       Main                            src\Main.hs:44:45-57                            919   10000000    0.1    0.0     0.2    0.0
+      splotch                        Main                            src\Main.hs:(33,1)-(37,89)                      920   10000000    0.0    0.0     0.0    0.0
+    buildMessage.msg'                Main                            src\Main.hs:45:9-145                            958   10000000    0.1    0.0    30.0   35.1
+     ccccooombbine                   Main                            src\Main.hs:45:44-145                           959   10000000   29.9   35.1    29.9   35.1
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      960   50000000    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      997   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingLvl          Main                            src\Main.hs:43:9-65                             908   10000000    0.2    0.0     2.8    1.0
+     showingLvl                      Main                            src\Main.hs:43:47-65                            909   10000000    1.4    0.3     2.6    1.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      912   10000000    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      913   10000000    0.0    0.0     0.0    0.0
+      show                           Main                            src\Main.hs:(26,5)-(30,26)                      910   10000000    0.0    0.0     0.0    0.0
+      unstream/resize                Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  914   10000000    1.2    0.7     1.2    0.7
+       maBA                          Data.Text.Array                 Data\Text\Array.hs:92:7-10                      917   20000000    0.0    0.0     0.0    0.0
+       shiftL                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      915   20000000    0.0    0.0     0.0    0.0
+       shiftR                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      916   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingNow          Main                            src\Main.hs:42:9-65                             900   10000000    0.1    0.0    29.4   26.2
+     showingNow                      Main                            src\Main.hs:42:47-65                            901   10000000   25.1   24.9    29.3   26.2
+      unstream/resize                Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  904   20000000    4.1    1.4     4.2    1.4
+       maBA                          Data.Text.Array                 Data\Text\Array.hs:92:7-10                      907   40000000    0.0    0.0     0.0    0.0
+       shiftL                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      905   40000000    0.0    0.0     0.0    0.0
+       shiftR                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      906   20000000    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      902   10000000    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      903   10000000    0.0    0.0     0.0    0.0
+    getPOSIXTime                     Main                            src\Main.hs:41:39-50                            894   10000000    0.0    0.0     0.0    0.0
+   hPutStrLn                         Data.Text.IO                    Data\Text\IO.hs:285:1-46                        895   10000000    2.6    4.1    29.6   35.1
+    hPutStr                          Data.Text.IO                    Data\Text\IO.hs:(174,1)-(185,56)                896   10000000    1.4    1.2    27.0   31.0
+     hPutStr.\                       Data.Text.IO                    Data\Text\IO.hs:(176,48)-(178,50)               897   10000000    0.3    0.3     0.8    1.3
+      getSpareBuffer                 Data.Text.IO                    Data\Text\IO.hs:(257,1)-(272,38)                898   10000000    0.5    1.0     0.5    1.0
+     hPutStr.str                     Data.Text.IO                    Data\Text\IO.hs:179:7-20                        899   10000000    0.4    0.7     0.4    0.7
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      998   10000000    0.0    0.0     0.0    0.0
+     writeBlocksCRLF                 Data.Text.IO                    Data\Text\IO.hs:(226,1)-(239,35)                999   10000000    0.3    0.3    24.4   27.8
+      writeBlocksCRLF.outer          Data.Text.IO                    Data\Text\IO.hs:(228,3)-(239,35)               1000   10000000    2.7    0.3    24.1   27.5
+       writeBlocksCRLF.outer.inner   Data.Text.IO                    Data\Text\IO.hs:(230,5)-(238,61)               1001  588868775    7.1    0.0    21.4   27.3
+        writeBlocksCRLF.outer.commit Data.Text.IO                    Data\Text\IO.hs:239:5-35                       1003   10000000    6.7    5.0     6.7    5.0
+        hPutStr.str                  Data.Text.IO                    Data\Text\IO.hs:179:7-20                       1002          0    7.6   22.3     7.6   22.3
+* posix seems to behave quicker then currenttime
+* convert using posixSecondsToUTCTime
+** clean, build, and profile
+$ time stack exec --rts-options -p -- benchloggertest.exe
+real    2m39.889s
+user    0m0.000s
+sys     0m0.015s
+** profile
+        Thu Jun 15 20:04 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =      145.01 secs   (145011 ticks @ 1000 us, 1 processor)
+        total alloc = 227,368,999,520 bytes  (excludes profiling overheads)
+
+COST CENTRE                          MODULE                    SRC                                             %time %alloc
+
+showingNow                           Main                      src\Main.hs:42:47-65                             41.1   38.7
+ccccooombbine                        Main                      src\Main.hs:45:44-145                            19.6   27.6
+posixSecondsToUTCTime<$>getPOSIXTime Main                      src\Main.hs:41:63-100                            12.4    5.8
+hPutStr.str                          Data.Text.IO              Data\Text\IO.hs:179:7-20                          5.2   17.6
+writeBlocksCRLF.outer.inner          Data.Text.IO              Data\Text\IO.hs:(230,5)-(238,61)                  5.2    0.0
+writeBlocksCRLF.outer.commit         Data.Text.IO              Data\Text\IO.hs:239:5-35                          4.7    3.2
+unstream/resize                      Data.Text.Internal.Fusion Data\Text\Internal\Fusion.hs:(110,62)-(114,50)    4.5    2.0
+writeBlocksCRLF.outer                Data.Text.IO              Data\Text\IO.hs:(228,3)-(239,35)                  1.8    0.2
+hPutStrLn                            Data.Text.IO              Data\Text\IO.hs:285:1-46                          1.5    2.6
+
+
+                                                                                                                                            individual      inherited
+COST CENTRE                              MODULE                          SRC                                            no.      entries  %time %alloc   %time %alloc
+
+MAIN                                     MAIN                            <built-in>                                      444          0    0.0    0.0   100.0  100.0
+ CAF                                     GHC.IO.Encoding.CodePage        <entire-module>                                 878          0    0.0    0.0     0.0    0.0
+ CAF                                     GHC.IO.FD                       <entire-module>                                 872          0    0.0    0.0     0.0    0.0
+ CAF                                     GHC.IO.Encoding                 <entire-module>                                 871          0    0.0    0.0     0.0    0.0
+ CAF                                     GHC.IO.Handle.FD                <entire-module>                                 855          0    0.0    0.0     0.0    0.0
+ CAF                                     Data.Time.LocalTime.TimeZone    <entire-module>                                 520          0    0.0    0.0     0.0    0.0
+ CAF                                     Data.Time.Clock.POSIX           <entire-module>                                 519          0    0.0    0.0     0.0    0.0
+ CAF:$fIsStringText_$cfromString         Data.Text                       Data\Text.hs:353:5-14                           548          0    0.0    0.0     0.0    0.0
+  fromString                             Data.Text                       Data\Text.hs:353:5-21                           938          1    0.0    0.0     0.0    0.0
+ CAF:$fNumSize_$c+                       Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-7        832          0    0.0    0.0     0.0    0.0
+  +                                      Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-17       947          1    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                        Main                            <no location info>                              451          0    0.0    0.0     0.0    0.0
+  show                                   Main                            src\Main.hs:(17,5)-(22,27)                      954          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                        Main                            <no location info>                              456          0    0.0    0.0     0.0    0.0
+  show                                   Main                            src\Main.hs:(17,5)-(22,27)                      930          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6                 Main                            <no location info>                              461          0    0.0    0.0     0.0    0.0
+  show                                   Main                            src\Main.hs:(26,5)-(30,26)                      911          0    0.0    0.0     0.0    0.0
+ CAF:bench2                              Main                            <no location info>                              515          0    0.0    0.0     0.0    0.0
+  bench1                                 Main                            src\Main.hs:(51,1)-(54,12)                      889          1    0.0    0.0     0.0    0.0
+ CAF:bench3                              Main                            <no location info>                              514          0    0.0    0.0     0.0    0.0
+  bench1                                 Main                            src\Main.hs:(51,1)-(54,12)                      989          0    0.0    0.0     0.0    0.0
+   unstream/resize                       Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  993          2    0.0    0.0     0.0    0.0
+    maBA                                 Data.Text.Array                 Data\Text\Array.hs:92:7-10                      996          4    0.0    0.0     0.0    0.0
+    shiftL                               Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      994          4    0.0    0.0     0.0    0.0
+    shiftR                               Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      995          2    0.0    0.0     0.0    0.0
+   shiftL                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      990          1    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      991          1    0.0    0.0     0.0    0.0
+ CAF:bench4                              Main                            <no location info>                              513          0    0.0    0.0     0.0    0.0
+  bench1                                 Main                            src\Main.hs:(51,1)-(54,12)                      992          0    0.0    0.0     0.0    0.0
+ CAF:bench7                              Main                            <no location info>                              512          0    0.0    0.0     0.0    0.0
+  bench1                                 Main                            src\Main.hs:(51,1)-(54,12)                      891          0    0.0    0.0     0.0    0.0
+ CAF:lvl1_r7oT                           Main                            <no location info>                              506          0    0.0    0.0     0.0    0.0
+  buildMessage                           Main                            src\Main.hs:(40,1)-(46,17)                      969          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                     Main                            src\Main.hs:45:9-145                            970          0    0.0    0.0     0.0    0.0
+    ccccooombbine                        Main                            src\Main.hs:45:44-145                           971          0    0.0    0.0     0.0    0.0
+ CAF:lvl2_r7oU                           Main                            <no location info>                              507          0    0.0    0.0     0.0    0.0
+  buildMessage                           Main                            src\Main.hs:(40,1)-(46,17)                      964          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                     Main                            src\Main.hs:45:9-145                            965          0    0.0    0.0     0.0    0.0
+    ccccooombbine                        Main                            src\Main.hs:45:44-145                           966          0    0.0    0.0     0.0    0.0
+     shiftL                              Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      967          1    0.0    0.0     0.0    0.0
+     shiftR                              Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      968          1    0.0    0.0     0.0    0.0
+     unstream/resize                     Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  972          1    0.0    0.0     0.0    0.0
+      maBA                               Data.Text.Array                 Data\Text\Array.hs:92:7-10                      975          2    0.0    0.0     0.0    0.0
+      shiftL                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      973          2    0.0    0.0     0.0    0.0
+      shiftR                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      974          1    0.0    0.0     0.0    0.0
+ CAF:lvl3_r7oV                           Main                            <no location info>                              508          0    0.0    0.0     0.0    0.0
+  buildMessage                           Main                            src\Main.hs:(40,1)-(46,17)                      961          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                     Main                            src\Main.hs:45:9-145                            962          0    0.0    0.0     0.0    0.0
+    ccccooombbine                        Main                            src\Main.hs:45:44-145                           963          0    0.0    0.0     0.0    0.0
+     shiftR                              Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      976          1    0.0    0.0     0.0    0.0
+ CAF:lvl4_r7oW                           Main                            <no location info>                              509          0    0.0    0.0     0.0    0.0
+  buildMessage                           Main                            src\Main.hs:(40,1)-(46,17)                      985          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                     Main                            src\Main.hs:45:9-145                            986          0    0.0    0.0     0.0    0.0
+    ccccooombbine                        Main                            src\Main.hs:45:44-145                           987          0    0.0    0.0     0.0    0.0
+ CAF:lvl5_r7oX                           Main                            <no location info>                              510          0    0.0    0.0     0.0    0.0
+  buildMessage                           Main                            src\Main.hs:(40,1)-(46,17)                      980          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                     Main                            src\Main.hs:45:9-145                            981          0    0.0    0.0     0.0    0.0
+    ccccooombbine                        Main                            src\Main.hs:45:44-145                           982          0    0.0    0.0     0.0    0.0
+     shiftL                              Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      983          1    0.0    0.0     0.0    0.0
+     shiftR                              Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      984          1    0.0    0.0     0.0    0.0
+ CAF:lvl6_r7oY                           Main                            <no location info>                              511          0    0.0    0.0     0.0    0.0
+  buildMessage                           Main                            src\Main.hs:(40,1)-(46,17)                      977          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                     Main                            src\Main.hs:45:9-145                            978          0    0.0    0.0     0.0    0.0
+    ccccooombbine                        Main                            src\Main.hs:45:44-145                           979          0    0.0    0.0     0.0    0.0
+     shiftR                              Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      988          1    0.0    0.0     0.0    0.0
+ CAF:main1                               Main                            <no location info>                              517          0    0.0    0.0     0.0    0.0
+  main                                   Main                            src\Main.hs:56:1-13                             888          1    0.0    0.0     0.0    0.0
+ CAF:splotch10                           Main                            <no location info>                              466          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      937          0    0.0    0.0     0.0    0.0
+   shiftL                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      939          1    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      940          1    0.0    0.0     0.0    0.0
+   unstream/resize                       Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  942          1    0.0    0.0     0.0    0.0
+    maBA                                 Data.Text.Array                 Data\Text\Array.hs:92:7-10                      945          2    0.0    0.0     0.0    0.0
+    shiftL                               Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      943          2    0.0    0.0     0.0    0.0
+    shiftR                               Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      944          1    0.0    0.0     0.0    0.0
+ CAF:splotch11                           Main                            <no location info>                              465          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      941          0    0.0    0.0     0.0    0.0
+ CAF:splotch46                           Main                            <no location info>                              473          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      921          0    0.0    0.0     0.0    0.0
+   shiftL                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      956          1    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      957          1    0.0    0.0     0.0    0.0
+ CAF:splotch47                           Main                            <no location info>                              472          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      922          0    0.0    0.0     0.0    0.0
+ CAF:splotch48                           Main                            <no location info>                              471          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      948          0    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      955          1    0.0    0.0     0.0    0.0
+ CAF:splotch49                           Main                            <no location info>                              470          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      949          0    0.0    0.0     0.0    0.0
+   shiftL                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      950          1    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      951          1    0.0    0.0     0.0    0.0
+ CAF:splotch51                           Main                            <no location info>                              468          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      923          0    0.0    0.0     0.0    0.0
+ CAF:splotch52                           Main                            <no location info>                              464          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      924          0    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      935          1    0.0    0.0     0.0    0.0
+ CAF:splotch53                           Main                            <no location info>                              463          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      925          0    0.0    0.0     0.0    0.0
+   shiftL                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      926          1    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      927          1    0.0    0.0     0.0    0.0
+   unstream/resize                       Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  931          1    0.0    0.0     0.0    0.0
+    maBA                                 Data.Text.Array                 Data\Text\Array.hs:92:7-10                      934          2    0.0    0.0     0.0    0.0
+    shiftL                               Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      932          2    0.0    0.0     0.0    0.0
+    shiftR                               Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      933          1    0.0    0.0     0.0    0.0
+ CAF:splotch55                           Main                            <no location info>                              462          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      928          0    0.0    0.0     0.0    0.0
+   show                                  Main                            src\Main.hs:(17,5)-(22,27)                      929          1    0.0    0.0     0.0    0.0
+ CAF:splotch6                            Main                            <no location info>                              469          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      952          0    0.0    0.0     0.0    0.0
+   show                                  Main                            src\Main.hs:(17,5)-(22,27)                      953          1    0.0    0.0     0.0    0.0
+ CAF:splotch9                            Main                            <no location info>                              467          0    0.0    0.0     0.0    0.0
+  splotch                                Main                            src\Main.hs:(33,1)-(37,89)                      936          0    0.0    0.0     0.0    0.0
+   shiftR                                Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      946          1    0.0    0.0     0.0    0.0
+ bench1                                  Main                            src\Main.hs:(51,1)-(54,12)                      890          0    0.1    0.0   100.0  100.0
+  slog                                   Main                            src\Main.hs:49:1-61                             892          1    0.2    0.1    99.9  100.0
+   buildMessage                          Main                            src\Main.hs:(40,1)-(46,17)                      893   10000000    0.8    0.2    79.8   74.5
+    buildMessage.doSplotch               Main                            src\Main.hs:44:9-57                             918   10000000    0.1    0.0     0.2    0.0
+     doSplotch                           Main                            src\Main.hs:44:45-57                            919   10000000    0.1    0.0     0.1    0.0
+      splotch                            Main                            src\Main.hs:(33,1)-(37,89)                      920   10000000    0.1    0.0     0.1    0.0
+    buildMessage.msg'                    Main                            src\Main.hs:45:9-145                            958   10000000    0.1    0.0    19.7   27.6
+     ccccooombbine                       Main                            src\Main.hs:45:44-145                           959   10000000   19.6   27.6    19.6   27.6
+      shiftR                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      960   50000000    0.0    0.0     0.0    0.0
+      shiftL                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      997   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingLvl              Main                            src\Main.hs:43:9-65                             908   10000000    0.1    0.0     1.6    0.6
+     showingLvl                          Main                            src\Main.hs:43:47-65                            909   10000000    0.8    0.2     1.4    0.6
+      shiftL                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      912   10000000    0.0    0.0     0.0    0.0
+      shiftR                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      913   10000000    0.0    0.0     0.0    0.0
+      show                               Main                            src\Main.hs:(26,5)-(30,26)                      910   10000000    0.0    0.0     0.0    0.0
+      unstream/resize                    Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  914   10000000    0.6    0.5     0.7    0.5
+       maBA                              Data.Text.Array                 Data\Text\Array.hs:92:7-10                      917   20000000    0.0    0.0     0.0    0.0
+       shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      915   20000000    0.0    0.0     0.0    0.0
+       shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      916   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingNow              Main                            src\Main.hs:42:9-65                             900   10000000    0.1    0.0    45.2   40.2
+     showingNow                          Main                            src\Main.hs:42:47-65                            901   10000000   41.1   38.7    45.0   40.2
+      unstream/resize                    Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  904   30000000    3.9    1.5     3.9    1.5
+       maBA                              Data.Text.Array                 Data\Text\Array.hs:92:7-10                      907   60000000    0.0    0.0     0.0    0.0
+       shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      905   60000000    0.0    0.0     0.0    0.0
+       shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      906   30000000    0.0    0.0     0.0    0.0
+      shiftL                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      902   10000000    0.0    0.0     0.0    0.0
+      shiftR                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      903   10000000    0.0    0.0     0.0    0.0
+    posixSecondsToUTCTime<$>getPOSIXTime Main                            src\Main.hs:41:63-100                           894   10000000   12.4    5.8    12.4    5.8
+   hPutStrLn                             Data.Text.IO                    Data\Text\IO.hs:285:1-46                        895   10000000    1.5    2.6    19.8   25.4
+    hPutStr                              Data.Text.IO                    Data\Text\IO.hs:(174,1)-(185,56)                896   10000000    0.9    0.8    18.3   22.8
+     hPutStr.\                           Data.Text.IO                    Data\Text\IO.hs:(176,48)-(178,50)               897   10000000    0.2    0.2     0.4    0.8
+      getSpareBuffer                     Data.Text.IO                    Data\Text\IO.hs:(257,1)-(272,38)                898   10000000    0.3    0.6     0.3    0.6
+     hPutStr.str                         Data.Text.IO                    Data\Text\IO.hs:179:7-20                        899   10000000    0.3    0.4     0.3    0.4
+      shiftR                             Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      998   10000000    0.0    0.0     0.0    0.0
+     writeBlocksCRLF                     Data.Text.IO                    Data\Text\IO.hs:(226,1)-(239,35)                999   10000000    0.2    0.2    16.7   20.8
+      writeBlocksCRLF.outer              Data.Text.IO                    Data\Text\IO.hs:(228,3)-(239,35)               1000   10000000    1.8    0.2    16.6   20.6
+       writeBlocksCRLF.outer.inner       Data.Text.IO                    Data\Text\IO.hs:(230,5)-(238,61)               1001  708867904    5.2    0.0    14.7   20.4
+        writeBlocksCRLF.outer.commit     Data.Text.IO                    Data\Text\IO.hs:239:5-35                       1003   10000000    4.7    3.2     4.7    3.2
+        hPutStr.str                      Data.Text.IO                    Data\Text\IO.hs:179:7-20                       1002          0    4.9   17.2     4.9   17.2
+** Having UTCTime for and using show is definetly making it take a while longer
+* changing to use formatTime
+let showingNow = {-# SCC "formattingNow" #-} (T.pack $ formatTime defaultTimeLocale (iso8601DateFormat (Just "%H:%M:%S")) now)
+** clean, build, and profile
+$ time stack exec --rts-options -p -- benchloggertest.exe
+real    3m23.867s
+user    0m0.000s
+sys     0m0.015s
+** da profile
+        Thu Jun 15 20:19 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =      189.84 secs   (189837 ticks @ 1000 us, 1 processor)
+        total alloc = 270,309,049,072 bytes  (excludes profiling overheads)
+
+COST CENTRE                  MODULE                    SRC                                             %time %alloc
+
+formattingNow                Main                      src\Main.hs:41:50-130                            60.1   55.8
+ccccooombbine                Main                      src\Main.hs:44:44-145                            12.6   18.9
+buildMessage                 Main                      src\Main.hs:(39,1)-(45,17)                       10.0    5.0
+writeBlocksCRLF.outer.commit Data.Text.IO              Data\Text\IO.hs:239:5-35                          3.5    2.7
+hPutStr.str                  Data.Text.IO              Data\Text\IO.hs:179:7-20                          3.3   12.4
+writeBlocksCRLF.outer.inner  Data.Text.IO              Data\Text\IO.hs:(230,5)-(238,61)                  3.0    0.0
+unstream/resize              Data.Text.Internal.Fusion Data\Text\Internal\Fusion.hs:(110,62)-(114,50)    2.5    1.1
+hPutStrLn                    Data.Text.IO              Data\Text\IO.hs:285:1-46                          1.2    2.2
+writeBlocksCRLF.outer        Data.Text.IO              Data\Text\IO.hs:(228,3)-(239,35)                  1.1    0.1
+
+
+                                                                                                                                        individual      inherited
+COST CENTRE                          MODULE                          SRC                                            no.      entries  %time %alloc   %time %alloc
+
+MAIN                                 MAIN                            <built-in>                                      448          0    0.0    0.0   100.0  100.0
+ CAF                                 GHC.IO.Encoding.CodePage        <entire-module>                                 886          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.FD                       <entire-module>                                 880          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Encoding                 <entire-module>                                 879          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.FD                <entire-module>                                 863          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.POSIX           <entire-module>                                 526          0    0.0    0.0     0.0    0.0
+ CAF:$fIsStringText_$cfromString     Data.Text                       Data\Text.hs:353:5-14                           556          0    0.0    0.0     0.0    0.0
+  fromString                         Data.Text                       Data\Text.hs:353:5-21                           952          1    0.0    0.0     0.0    0.0
+ CAF:$fNumSize_$c+                   Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-7        840          0    0.0    0.0     0.0    0.0
+  +                                  Data.Text.Internal.Fusion.Size  Data\Text\Internal\Fusion\Size.hs:79:5-17       961          1    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                    Main                            <no location info>                              455          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                      968          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                    Main                            <no location info>                              460          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(16,5)-(21,27)                      944          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6             Main                            <no location info>                              465          0    0.0    0.0     0.0    0.0
+  show                               Main                            src\Main.hs:(25,5)-(29,26)                      925          0    0.0    0.0     0.0    0.0
+ CAF:bench2                          Main                            <no location info>                              521          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                      897          1    0.0    0.0     0.0    0.0
+ CAF:bench3                          Main                            <no location info>                              520          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                     1003          0    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50) 1007          2    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                     1010          4    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     1008          4    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     1009          2    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     1004          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     1005          1    0.0    0.0     0.0    0.0
+ CAF:bench4                          Main                            <no location info>                              519          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                     1006          0    0.0    0.0     0.0    0.0
+ CAF:bench7                          Main                            <no location info>                              518          0    0.0    0.0     0.0    0.0
+  bench1                             Main                            src\Main.hs:(51,1)-(54,12)                      899          0    0.0    0.0     0.0    0.0
+ CAF:lvl2_r7nA                       Main                            <no location info>                              511          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      910          0    0.0    0.0     0.0    0.0
+   buildMessage.showingNow           Main                            src\Main.hs:41:9-130                            911          0    0.0    0.0     0.0    0.0
+    formattingNow                    Main                            src\Main.hs:41:50-130                           912          0    0.0    0.0     0.0    0.0
+ CAF:lvl3_r7nB                       Main                            <no location info>                              512          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      983          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            984          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           985          0    0.0    0.0     0.0    0.0
+ CAF:lvl4_r7nC                       Main                            <no location info>                              513          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      978          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            979          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           980          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      981          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      982          1    0.0    0.0     0.0    0.0
+     unstream/resize                 Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  986          1    0.0    0.0     0.0    0.0
+      maBA                           Data.Text.Array                 Data\Text\Array.hs:92:7-10                      989          2    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      987          2    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      988          1    0.0    0.0     0.0    0.0
+ CAF:lvl5_r7nD                       Main                            <no location info>                              514          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      975          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            976          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           977          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      990          1    0.0    0.0     0.0    0.0
+ CAF:lvl6_r7nE                       Main                            <no location info>                              515          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      999          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                           1000          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                          1001          0    0.0    0.0     0.0    0.0
+ CAF:lvl7_r7nF                       Main                            <no location info>                              516          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      994          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            995          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           996          0    0.0    0.0     0.0    0.0
+     shiftL                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      997          1    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      998          1    0.0    0.0     0.0    0.0
+ CAF:lvl8_r7nG                       Main                            <no location info>                              517          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      991          0    0.0    0.0     0.0    0.0
+   buildMessage.msg'                 Main                            src\Main.hs:44:9-145                            992          0    0.0    0.0     0.0    0.0
+    ccccooombbine                    Main                            src\Main.hs:44:44-145                           993          0    0.0    0.0     0.0    0.0
+     shiftR                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     1002          1    0.0    0.0     0.0    0.0
+ CAF:lvl_r7ny                        Main                            <no location info>                              510          0    0.0    0.0     0.0    0.0
+  buildMessage                       Main                            src\Main.hs:(39,1)-(45,17)                      919          0    0.0    0.0     0.0    0.0
+   buildMessage.showingNow           Main                            src\Main.hs:41:9-130                            920          0    0.0    0.0     0.0    0.0
+    formattingNow                    Main                            src\Main.hs:41:50-130                           921          0    0.0    0.0     0.0    0.0
+ CAF:main1                           Main                            <no location info>                              523          0    0.0    0.0     0.0    0.0
+  main                               Main                            src\Main.hs:57:1-13                             896          1    0.0    0.0     0.0    0.0
+ CAF:splotch10                       Main                            <no location info>                              470          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      951          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      953          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      954          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  956          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      959          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      957          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      958          1    0.0    0.0     0.0    0.0
+ CAF:splotch11                       Main                            <no location info>                              469          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      955          0    0.0    0.0     0.0    0.0
+ CAF:splotch46                       Main                            <no location info>                              477          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      935          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      970          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      971          1    0.0    0.0     0.0    0.0
+ CAF:splotch47                       Main                            <no location info>                              476          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      936          0    0.0    0.0     0.0    0.0
+ CAF:splotch48                       Main                            <no location info>                              475          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      962          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      969          1    0.0    0.0     0.0    0.0
+ CAF:splotch49                       Main                            <no location info>                              474          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      963          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      964          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      965          1    0.0    0.0     0.0    0.0
+ CAF:splotch51                       Main                            <no location info>                              472          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      937          0    0.0    0.0     0.0    0.0
+ CAF:splotch52                       Main                            <no location info>                              468          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      938          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      949          1    0.0    0.0     0.0    0.0
+ CAF:splotch53                       Main                            <no location info>                              467          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      939          0    0.0    0.0     0.0    0.0
+   shiftL                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      940          1    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      941          1    0.0    0.0     0.0    0.0
+   unstream/resize                   Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  945          1    0.0    0.0     0.0    0.0
+    maBA                             Data.Text.Array                 Data\Text\Array.hs:92:7-10                      948          2    0.0    0.0     0.0    0.0
+    shiftL                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      946          2    0.0    0.0     0.0    0.0
+    shiftR                           Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      947          1    0.0    0.0     0.0    0.0
+ CAF:splotch55                       Main                            <no location info>                              466          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      942          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                      943          1    0.0    0.0     0.0    0.0
+ CAF:splotch6                        Main                            <no location info>                              473          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      966          0    0.0    0.0     0.0    0.0
+   show                              Main                            src\Main.hs:(16,5)-(21,27)                      967          1    0.0    0.0     0.0    0.0
+ CAF:splotch9                        Main                            <no location info>                              471          0    0.0    0.0     0.0    0.0
+  splotch                            Main                            src\Main.hs:(32,1)-(36,89)                      950          0    0.0    0.0     0.0    0.0
+   shiftR                            Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      960          1    0.0    0.0     0.0    0.0
+ bench1                              Main                            src\Main.hs:(51,1)-(54,12)                      898          0    0.1    0.0   100.0  100.0
+  slog                               Main                            src\Main.hs:48:1-61                             900          1    0.2    0.1    99.9  100.0
+   buildMessage                      Main                            src\Main.hs:(39,1)-(45,17)                      901   10000000   10.0    5.0    86.3   81.0
+    buildMessage.doSplotch           Main                            src\Main.hs:43:9-57                             932   10000000    0.1    0.0     0.2    0.0
+     doSplotch                       Main                            src\Main.hs:43:45-57                            933   10000000    0.1    0.0     0.2    0.0
+      splotch                        Main                            src\Main.hs:(32,1)-(36,89)                      934   10000000    0.1    0.0     0.1    0.0
+    buildMessage.msg'                Main                            src\Main.hs:44:9-145                            972   10000000    0.1    0.0    12.6   18.9
+     ccccooombbine                   Main                            src\Main.hs:44:44-145                           973   10000000   12.6   18.9    12.6   18.9
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      974   50000000    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50     1011   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingLvl          Main                            src\Main.hs:42:9-65                             922   10000000    0.1    0.0     1.3    0.5
+     showingLvl                      Main                            src\Main.hs:42:47-65                            923   10000000    0.6    0.1     1.2    0.5
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      926   10000000    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      927   10000000    0.0    0.0     0.0    0.0
+      show                           Main                            src\Main.hs:(25,5)-(29,26)                      924   10000000    0.0    0.0     0.0    0.0
+      unstream/resize                Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  928   10000000    0.6    0.4     0.6    0.4
+       maBA                          Data.Text.Array                 Data\Text\Array.hs:92:7-10                      931   20000000    0.0    0.0     0.0    0.0
+       shiftL                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      929   20000000    0.0    0.0     0.0    0.0
+       shiftR                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      930   10000000    0.0    0.0     0.0    0.0
+    buildMessage.showingNow          Main                            src\Main.hs:41:9-130                            908   10000000    0.1    0.0    62.2   56.5
+     formattingNow                   Main                            src\Main.hs:41:50-130                           909   10000000   60.1   55.8    62.1   56.5
+      unstream/resize                Data.Text.Internal.Fusion       Data\Text\Internal\Fusion.hs:(110,62)-(114,50)  915   20000000    2.0    0.7     2.0    0.7
+       maBA                          Data.Text.Array                 Data\Text\Array.hs:92:7-10                      918   40000000    0.0    0.0     0.0    0.0
+       shiftL                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      916   40000000    0.0    0.0     0.0    0.0
+       shiftR                        Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      917   20000000    0.0    0.0     0.0    0.0
+      shiftL                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50      913   10000000    0.0    0.0     0.0    0.0
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51      914   10000000    0.0    0.0     0.0    0.0
+    getCurrentTime                   Main                            src\Main.hs:40:41-54                            902   10000000    0.0    0.0     0.0    0.0
+   hPutStrLn                         Data.Text.IO                    Data\Text\IO.hs:285:1-46                        903   10000000    1.2    2.2    13.4   18.9
+    hPutStr                          Data.Text.IO                    Data\Text\IO.hs:(174,1)-(185,56)                904   10000000    0.6    0.7    12.1   16.7
+     hPutStr.\                       Data.Text.IO                    Data\Text\IO.hs:(176,48)-(178,50)               905   10000000    0.2    0.2     0.4    0.7
+      getSpareBuffer                 Data.Text.IO                    Data\Text\IO.hs:(257,1)-(272,38)                906   10000000    0.3    0.5     0.3    0.5
+     hPutStr.str                     Data.Text.IO                    Data\Text\IO.hs:179:7-20                        907   10000000    0.2    0.4     0.2    0.4
+      shiftR                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51     1012   10000000    0.0    0.0     0.0    0.0
+     writeBlocksCRLF                 Data.Text.IO                    Data\Text\IO.hs:(226,1)-(239,35)               1013   10000000    0.1    0.1    10.9   15.0
+      writeBlocksCRLF.outer          Data.Text.IO                    Data\Text\IO.hs:(228,3)-(239,35)               1014   10000000    1.1    0.1    10.7   14.8
+       writeBlocksCRLF.outer.inner   Data.Text.IO                    Data\Text\IO.hs:(230,5)-(238,61)               1015  590000000    3.0    0.0     9.6   14.7
+        writeBlocksCRLF.outer.commit Data.Text.IO                    Data\Text\IO.hs:239:5-35                       1017   10000000    3.5    2.7     3.5    2.7
+        hPutStr.str                  Data.Text.IO                    Data\Text\IO.hs:179:7-20                       1016          0    3.1   12.0     3.1   12.0
+** it seems that running the time through the formatter is even more expensive
+* looked up how fast-logger does it https://hackage.haskell.org/package/fast-logger
+** actually formats the time every second and then holds on to that formatted string and uses it as it needs, basically caches the computation
+* decided to go back to askers original code
+** clean, build, and profile
+$ time stack exec --rts-options -p -- benchloggertest.exe
+real    1m39.371s
+user    0m0.000s
+sys     0m0.000s
+** profile
+        Thu Jun 15 21:08 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =       89.90 secs   (89898 ticks @ 1000 us, 1 processor)
+        total alloc = 144,814,075,640 bytes  (excludes profiling overheads)
+
+COST CENTRE  MODULE SRC                         %time %alloc
+
+buildMessage Main   src\Main.hs:(35,1)-(37,79)   84.7   93.2
+slog         Main   src\Main.hs:40:1-57          14.8    6.8
+
+
+                                                                                                    individual      inherited
+COST CENTRE              MODULE                       SRC                        no.     entries  %time %alloc   %time %alloc
+
+MAIN                     MAIN                         <built-in>                  67          0    0.0    0.0   100.0  100.0
+ CAF                     GHC.IO.Encoding.CodePage     <entire-module>            118          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.FD                    <entire-module>            114          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Encoding              <entire-module>            113          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.Text           <entire-module>            108          0    0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.FD             <entire-module>            103          0    0.0    0.0     0.0    0.0
+ CAF                     Data.Time.LocalTime.TimeZone <entire-module>            100          0    0.0    0.0     0.0    0.0
+ CAF                     Data.Time.Clock.POSIX        <entire-module>             99          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2        Main                         <no location info>          74          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(12,5)-(17,27) 152          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7        Main                         <no location info>          79          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(12,5)-(17,27) 148          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6 Main                         <no location info>          84          0    0.0    0.0     0.0    0.0
+  show                   Main                         src\Main.hs:(21,5)-(25,26) 144          0    0.0    0.0     0.0    0.0
+ CAF:bench12             Main                         <no location info>          87          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 146          0    0.0    0.0     0.0    0.0
+   show                  Main                         src\Main.hs:(12,5)-(17,27) 147          1    0.0    0.0     0.0    0.0
+ CAF:bench13             Main                         <no location info>          92          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 137          0    0.0    0.0     0.0    0.0
+ CAF:bench2              Main                         <no location info>          95          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 135          1    0.0    0.0     0.0    0.0
+ CAF:bench3              Main                         <no location info>          94          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 139          0    0.0    0.0     0.0    0.0
+   slog                  Main                         src\Main.hs:40:1-57        140          0    0.0    0.0     0.0    0.0
+    buildMessage         Main                         src\Main.hs:(35,1)-(37,79) 141          1    0.0    0.0     0.0    0.0
+ CAF:bench4              Main                         <no location info>          93          0    0.0    0.0     0.0    0.0
+  bench1                 Main                         src\Main.hs:(42,1)-(45,12) 153          0    0.0    0.0     0.0    0.0
+ CAF:bench7              Main                         <no location info>          86          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 149          0    0.0    0.0     0.0    0.0
+ CAF:bench8              Main                         <no location info>          85          0    0.0    0.0     0.0    0.0
+  splotch                Main                         src\Main.hs:(28,1)-(32,55) 150          0    0.0    0.0     0.0    0.0
+   show                  Main                         src\Main.hs:(12,5)-(17,27) 151          1    0.0    0.0     0.0    0.0
+ CAF:main1               Main                         <no location info>          97          0    0.0    0.0     0.0    0.0
+  main                   Main                         src\Main.hs:47:1-13        134          1    0.0    0.0     0.0    0.0
+ bench1                  Main                         src\Main.hs:(42,1)-(45,12) 136          0    0.3    0.0   100.0  100.0
+  slog                   Main                         src\Main.hs:40:1-57        138          1   14.8    6.8    99.7  100.0
+   buildMessage          Main                         src\Main.hs:(35,1)-(37,79) 142          0   84.7   93.2    84.8   93.2
+    show                 Main                         src\Main.hs:(21,5)-(25,26) 143   10000000    0.1    0.0     0.1    0.0
+    splotch              Main                         src\Main.hs:(28,1)-(32,55) 145   10000000    0.1    0.0     0.1    0.0
+* now to play around with mimicing what fast-logger does .... ....
+* changed code to use a cache of the time format (changes every second)
+** clean, build, and profile
+$ time stack exec --rts-options -p -- benchloggertest.exe
+real    0m37.914s
+user    0m0.000s
+sys     0m0.000s
+** profile
+        Thu Jun 15 21:22 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =       28.18 secs   (28179 ticks @ 1000 us, 1 processor)
+        total alloc = 20,679,958,176 bytes  (excludes profiling overheads)
+
+COST CENTRE  MODULE SRC                         %time %alloc
+
+slog         Main   src\Main.hs:(41,1)-(44,20)   82.4   48.5
+buildMessage Main   src\Main.hs:(37,1)-(38,73)   16.6   51.5
+
+
+                                                                                                                         individual      inherited
+COST CENTRE                          MODULE                   SRC                                     no.     entries  %time %alloc   %time %alloc
+
+MAIN                                 MAIN                     <built-in>                               83          0    0.0    0.0   100.0  100.0
+ CAF                                 GHC.IO.Encoding.CodePage <entire-module>                         152          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.FD                <entire-module>                         148          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Encoding          <entire-module>                         147          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.Text       <entire-module>                         142          0    0.0    0.0     0.0    0.0
+ CAF                                 GHC.IO.Handle.FD         <entire-module>                         136          0    0.0    0.0     0.0    0.0
+ CAF                                 Data.Time.Clock.POSIX    <entire-module>                         123          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor2                    Main                     <no location info>                       90          0    0.0    0.0     0.0    0.0
+  show                               Main                     src\Main.hs:(14,5)-(19,27)              215          0    0.0    0.0     0.0    0.0
+ CAF:$fShowColor7                    Main                     <no location info>                       95          0    0.0    0.0     0.0    0.0
+  show                               Main                     src\Main.hs:(14,5)-(19,27)              211          0    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6             Main                     <no location info>                      100          0    0.0    0.0     0.0    0.0
+  show                               Main                     src\Main.hs:(23,5)-(27,26)              199          0    0.0    0.0     0.0    0.0
+ CAF:bench10                         Main                     <no location info>                      101          0    0.0    0.0     0.0    0.0
+  splotch                            Main                     src\Main.hs:(30,1)-(34,55)              213          0    0.0    0.0     0.0    0.0
+   show                              Main                     src\Main.hs:(14,5)-(19,27)              214          1    0.0    0.0     0.0    0.0
+ CAF:bench11                         Main                     <no location info>                      112          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              170          0    0.0    0.0     0.0    0.0
+   mkAutoUpdate                      Control.AutoUpdate       Control\AutoUpdate.hs:106:1-47          171          1    0.0    0.0     0.0    0.0
+    mkAutoUpdateHelper               Control.AutoUpdate       Control\AutoUpdate.hs:(117,1)-(195,35)  172          1    0.0    0.0     0.0    0.0
+ CAF:bench12                         Main                     <no location info>                      111          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              183          0    0.0    0.0     0.0    0.0
+ CAF:bench16                         Main                     <no location info>                      110          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              188          0    0.0    0.0     0.0    0.0
+ CAF:bench18                         Main                     <no location info>                      109          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              189          0    0.0    0.0     0.0    0.0
+ CAF:bench19                         Main                     <no location info>                      108          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              169          0    0.0    0.0     0.0    0.0
+ CAF:bench2                          Main                     <no location info>                      118          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              167          1    0.0    0.0     0.0    0.0
+ CAF:bench3                          Main                     <no location info>                      117          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              190          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              191          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     192          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              193          0    0.0    0.0     0.0    0.0
+      show                           Main                     src\Main.hs:(23,5)-(27,26)              194          1    0.0    0.0     0.0    0.0
+ CAF:bench4                          Main                     <no location info>                      116          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              195          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              196          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     197          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              198          0    0.0    0.0     0.0    0.0
+ CAF:bench5                          Main                     <no location info>                      115          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              200          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              201          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     202          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              203          0    0.0    0.0     0.0    0.0
+      splotch                        Main                     src\Main.hs:(30,1)-(34,55)              204          1    0.0    0.0     0.0    0.0
+ CAF:bench6                          Main                     <no location info>                      114          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              205          0    0.0    0.0     0.0    0.0
+   slog                              Main                     src\Main.hs:(41,1)-(44,20)              206          0    0.0    0.0     0.0    0.0
+    slog.msg'                        Main                     src\Main.hs:43:7-35                     207          0    0.0    0.0     0.0    0.0
+     buildMessage                    Main                     src\Main.hs:(37,1)-(38,73)              208          0    0.0    0.0     0.0    0.0
+ CAF:bench7                          Main                     <no location info>                      113          0    0.0    0.0     0.0    0.0
+  bench1                             Main                     src\Main.hs:(47,1)-(53,12)              216          0    0.0    0.0     0.0    0.0
+ CAF:bench8                          Main                     <no location info>                      103          0    0.0    0.0     0.0    0.0
+  splotch                            Main                     src\Main.hs:(30,1)-(34,55)              209          0    0.0    0.0     0.0    0.0
+   show                              Main                     src\Main.hs:(14,5)-(19,27)              210          1    0.0    0.0     0.0    0.0
+ CAF:bench9                          Main                     <no location info>                      102          0    0.0    0.0     0.0    0.0
+  splotch                            Main                     src\Main.hs:(30,1)-(34,55)              212          0    0.0    0.0     0.0    0.0
+ CAF:defaultUpdateSettings           Control.AutoUpdate       Control\AutoUpdate.hs:59:1-21           132          0    0.0    0.0     0.0    0.0
+  defaultUpdateSettings              Control.AutoUpdate       Control\AutoUpdate.hs:(59,1)-(63,5)     184          1    0.0    0.0     0.0    0.0
+ CAF:main1                           Main                     <no location info>                      120          0    0.0    0.0     0.0    0.0
+  main                               Main                     src\Main.hs:56:1-13                     166          1    0.0    0.0     0.0    0.0
+ bench1                              Main                     src\Main.hs:(47,1)-(53,12)              168          0    0.5    0.0   100.0  100.0
+  slog                               Main                     src\Main.hs:(41,1)-(44,20)              175          1   82.4   48.5    99.5  100.0
+   slog.msg'                         Main                     src\Main.hs:43:7-35                     186   10000000    0.3    0.0    16.8   51.5
+    buildMessage                     Main                     src\Main.hs:(37,1)-(38,73)              187   10000000   16.6   51.5    16.6   51.5
+   mkAutoUpdate                      Control.AutoUpdate       Control\AutoUpdate.hs:106:1-47          176          0    0.0    0.0     0.3    0.0
+    mkAutoUpdateHelper               Control.AutoUpdate       Control\AutoUpdate.hs:(117,1)-(195,35)  177          0    0.3    0.0     0.3    0.0
+  mkAutoUpdate                       Control.AutoUpdate       Control\AutoUpdate.hs:106:1-47          173          0    0.0    0.0     0.0    0.0
+   mkAutoUpdateHelper                Control.AutoUpdate       Control\AutoUpdate.hs:(117,1)-(195,35)  174          0    0.0    0.0     0.0    0.0
+    mkAutoUpdateHelper.fillRefOnExit Control.AutoUpdate       Control\AutoUpdate.hs:(136,9)-(144,81)  178          1    0.0    0.0     0.0    0.0
+     mkAutoUpdateHelper.loop         Control.AutoUpdate       Control\AutoUpdate.hs:(160,13)-(180,42) 180         37    0.0    0.0     0.0    0.0
+      catchSome                      Control.AutoUpdate       Control\AutoUpdate.hs:201:1-87          181         38    0.0    0.0     0.0    0.0
+    mkAutoUpdateHelper.loop          Control.AutoUpdate       Control\AutoUpdate.hs:(160,13)-(180,42) 179          1    0.0    0.0     0.0    0.0
+     updateFreq                      Control.AutoUpdate       Control\AutoUpdate.hs:76:7-16           185         38    0.0    0.0     0.0    0.0
+     updateAction                    Control.AutoUpdate       Control\AutoUpdate.hs:93:7-18           182          1    0.0    0.0     0.0    0.0
