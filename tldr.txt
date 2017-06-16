@@ -1,0 +1,11 @@
+*Warning this is just some ramblings don't take this too seriously*
+
+Python version on my machine: 2m6.248s
+
+Original haskell version on my machine: 1m39.371s
+
+Cached Time Format: 0m37.914s
+
+Fast-Logger (slightly differnt then original problem) : 0m6.967s
+
+haskell was taking a long time to format the time each iteration, but it really didn't change but once a second. Changing it to cache the string for a second caused a huge speed up and using the fast-logging lib which appears to cache time format and do some buffered file writing significantly decreased run time.

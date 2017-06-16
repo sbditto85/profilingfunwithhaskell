@@ -1516,3 +1516,221 @@ MAIN                                 MAIN                     <built-in>        
     mkAutoUpdateHelper.loop          Control.AutoUpdate       Control\AutoUpdate.hs:(160,13)-(180,42) 179          1    0.0    0.0     0.0    0.0
      updateFreq                      Control.AutoUpdate       Control\AutoUpdate.hs:76:7-16           185         38    0.0    0.0     0.0    0.0
      updateAction                    Control.AutoUpdate       Control\AutoUpdate.hs:93:7-18           182          1    0.0    0.0     0.0    0.0
+* time the python program using python 3
+$ time winpty python slog.py
+real    2m6.248s
+user    0m0.000s
+sys     0m0.015s
+* try the answer given by https://codereview.stackexchange.com/a/165831/20419
+$ time stack exec --rts-options -p -- benchloggertest.exe
+real    0m6.967s
+user    0m0.000s
+sys     0m0.015s
+** profile
+        Fri Jun 16 00:01 2017 Time and Allocation Profiling Report  (Final)
+
+           benchloggertest.exe +RTS -p -RTS
+
+        total time  =        5.18 secs   (5183 ticks @ 1000 us, 1 processor)
+        total alloc = 8,522,368,368 bytes  (excludes profiling overheads)
+
+COST CENTRE                         MODULE                       SRC                                             %time %alloc
+
+pushLogStr                          System.Log.FastLogger        System\Log\FastLogger.hs:(110,1)-(121,9)         22.3   13.1
+writeRawBufferPtr2FD                System.Log.FastLogger.FileIO System\Log\FastLogger\FileIO.hs:40:1-99          17.1    0.1
+toLogStr                            System.Log.FastLogger.LogStr System\Log\FastLogger\LogStr.hs:75:5-54          15.0    9.4
+pushLog                             System.Log.FastLogger.Logger System\Log\FastLogger\Logger.hs:(36,1)-(54,58)   14.6   30.2
+mappend                             System.Log.FastLogger.LogStr System\Log\FastLogger\LogStr.hs:64:5-69          13.1   26.2
+toBench.toString                    Main                         src\Main.hs:79:9-61                               6.0    9.4
+newTimedFastLogger.fileLoggerInit.\ System.Log.FastLogger        System\Log\FastLogger.hs:241:43-75                4.8    8.4
+pushLog.checkBuf                    System.Log.FastLogger.Logger System\Log\FastLogger\Logger.hs:(52,5)-(54,58)    2.4    2.8
+newTimedFastLogger.fileLoggerInit   System.Log.FastLogger        System\Log\FastLogger.hs:241:5-96                 1.2    0.0
+toBench                             Main                         src\Main.hs:(77,1)-(80,85)                        1.0    0.0
+
+
+                                                                                                                                                          individual      inherited
+COST CENTRE                                          MODULE                          SRC                                               no.     entries  %time %alloc   %time %alloc
+
+MAIN                                                 MAIN                            <built-in>                                        404          0    0.0    0.0   100.0  100.0
+ CAF                                                 GHC.IO.Handle.FD                <entire-module>                                   794          0    0.0    0.0     0.0    0.0
+ CAF                                                 GHC.IO.Encoding.CodePage        <entire-module>                                   792          0    0.0    0.0     0.0    0.0
+ CAF                                                 GHC.IO.Encoding                 <entire-module>                                   779          0    0.0    0.0     0.0    0.0
+ CAF                                                 System.Win32.Types              <entire-module>                                   759          0    0.0    0.0     0.0    0.0
+ CAF                                                 Data.Time.Clock.POSIX           <entire-module>                                   755          0    0.0    0.0     0.0    0.0
+ CAF:$fIsStringLogStr_$ctoLogStr                     System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:83:5-12           467          0    0.0    0.0     0.0    0.0
+  toLogStr                                           System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:83:5-39           857          1    0.0    0.0     0.0    0.0
+ CAF:$fIsStringLogStr_$ctoLogStr1                    System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:77:5-12           465          0    0.0    0.0     0.0    0.0
+  toLogStr                                           System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:77:5-49           859          1    0.0    0.0     0.0    0.0
+ CAF:$fMonoidLogStr1                                 System.Log.FastLogger.LogStr    <no location info>                                469          0    0.0    0.0     0.0    0.0
+  mempty                                             System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:63:5-42           906          0    0.0    0.0     0.0    0.0
+ CAF:$fMonoidLogStr_$cmempty                         System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:63:5-10           470          0    0.0    0.0     0.0    0.0
+  mempty                                             System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:63:5-42           895          1    0.0    0.0     0.0    0.0
+ CAF:$fShowMessageLevel6                             Main                            <no location info>                                415          0    0.0    0.0     0.0    0.0
+  show                                               Main                            src\Main.hs:(70,5)-(74,26)                        874          0    0.0    0.0     0.0    0.0
+ CAF:$fToLogStr[]_$ctoLogStr                         System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:79:5-12           476          0    0.0    0.0     0.0    0.0
+  toLogStr                                           System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:79:5-33           855          1    0.0    0.0     0.0    0.0
+ CAF:defaultDebounceSettings                         Control.Debounce                Control\Debounce.hs:74:1-23                       770          0    0.0    0.0     0.0    0.0
+  defaultDebounceSettings                            Control.Debounce                Control\Debounce.hs:(74,1)-(77,5)                 834          1    0.0    0.0     0.0    0.0
+ CAF:defaultUpdateSettings                           Control.AutoUpdate              Control\AutoUpdate.hs:59:1-21                     769          0    0.0    0.0     0.0    0.0
+  defaultUpdateSettings                              Control.AutoUpdate              Control\AutoUpdate.hs:(59,1)-(63,5)               843          1    0.0    0.0     0.0    0.0
+ CAF:encodeUtf8Builder                               Data.Text.Lazy.Encoding         Data\Text\Lazy\Encoding.hs:163:1-17               736          0    0.0    0.0     0.0    0.0
+  encodeUtf8Builder                                  Data.Text.Lazy.Encoding         Data\Text\Lazy\Encoding.hs:(163,1)-(164,79)       881          1    0.0    0.0     0.0    0.0
+ CAF:encodeUtf8Builder1                              Data.Text.Encoding              <no location info>                                571          0    0.0    0.0     0.0    0.0
+  encodeUtf8Builder                                  Data.Text.Encoding              Data\Text\Encoding.hs:322:1-77                    884          1    0.0    0.0     0.0    0.0
+ CAF:fILE_APPEND_DATA                                System.Log.FastLogger.FileIO    System\Log\FastLogger\FileIO.hs:18:1-16           461          0    0.0    0.0     0.0    0.0
+  fILE_APPEND_DATA                                   System.Log.FastLogger.FileIO    System\Log\FastLogger\FileIO.hs:18:1-25           827          1    0.0    0.0     0.0    0.0
+ CAF:fastLogger1                                     Main                            <no location info>                                420          0    0.0    0.0     0.0    0.0
+  fastLogger                                         Main                            src\Main.hs:(83,1)-(86,40)                        812          1    0.0    0.0     0.0    0.0
+ CAF:fastLogger4                                     Main                            <no location info>                                419          0    0.0    0.0     0.0    0.0
+  fastLogger                                         Main                            src\Main.hs:(83,1)-(86,40)                        825          0    0.0    0.0     0.0    0.0
+   fastLogger.logType                                Main                            src\Main.hs:85:9-49                               826          0    0.0    0.0     0.0    0.0
+ CAF:fastLogger5                                     Main                            <no location info>                                418          0    0.0    0.0     0.0    0.0
+  fastLogger                                         Main                            src\Main.hs:(83,1)-(86,40)                        814          0    0.0    0.0     0.0    0.0
+   newTimeCache                                      System.Log.FastLogger.Date      System\Log\FastLogger\Date.hs:(65,1)-(67,5)       815          1    0.0    0.0     0.0    0.0
+    mkAutoUpdate                                     Control.AutoUpdate              Control\AutoUpdate.hs:106:1-47                    816          1    0.0    0.0     0.0    0.0
+     mkAutoUpdateHelper                              Control.AutoUpdate              Control\AutoUpdate.hs:(117,1)-(195,35)            817          1    0.0    0.0     0.0    0.0
+ CAF:fastLogger6                                     Main                            <no location info>                                417          0    0.0    0.0     0.0    0.0
+  fastLogger                                         Main                            src\Main.hs:(83,1)-(86,40)                        890          0    0.0    0.0     0.0    0.0
+ CAF:fastLogger7                                     Main                            <no location info>                                416          0    0.0    0.0     0.0    0.0
+  fastLogger                                         Main                            src\Main.hs:(83,1)-(86,40)                        891          0    0.0    0.0     0.0    0.0
+ CAF:getBuffer1                                      System.Log.FastLogger.IO        <no location info>                                446          0    0.0    0.0     0.0    0.0
+  getBuffer                                          System.Log.FastLogger.IO        System\Log\FastLogger\IO.hs:25:1-23               830          1    0.0    0.0     0.0    0.0
+ CAF:lvl5_r8Lz                                       System.Log.FastLogger.LogStr    <no location info>                                475          0    0.0    0.0     0.0    0.0
+  toLogStr                                           System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:79:5-33           886          0    0.0    0.0     0.0    0.0
+   unstreamChunks/inner                              Data.Text.Internal.Lazy.Fusion  Data\Text\Internal\Lazy\Fusion.hs:(79,17)-(83,59) 887          0    0.0    0.0     0.0    0.0
+    unstreamChunks/outer                             Data.Text.Internal.Lazy.Fusion  Data\Text\Internal\Lazy\Fusion.hs:(62,15)-(68,43) 888          1    0.0    0.0     0.0    0.0
+ CAF:main1                                           Main                            <no location info>                                426          0    0.0    0.0     0.0    0.0
+  main                                               Main                            src\Main.hs:65:1-42                               808          1    0.0    0.0     0.0    0.0
+   toBench                                           Main                            src\Main.hs:(77,1)-(80,85)                        809          1    0.0    0.0     0.0    0.0
+ CAF:main2                                           Main                            <no location info>                                425          0    0.0    0.0     0.0    0.0
+  main                                               Main                            src\Main.hs:65:1-42                               876          0    0.0    0.0     0.0    0.0
+ CAF:main5                                           Main                            <no location info>                                422          0    0.0    0.0     0.0    0.0
+  toBench                                            Main                            src\Main.hs:(77,1)-(80,85)                        864          0    0.0    0.0     0.0    0.0
+ CAF:main6                                           Main                            <no location info>                                423          0    0.0    0.0     0.0    0.0
+  toBench                                            Main                            src\Main.hs:(77,1)-(80,85)                        875          0    0.0    0.0     0.0    0.0
+ CAF:main8                                           Main                            <no location info>                                424          0    0.0    0.0     0.0    0.0
+  toBench                                            Main                            src\Main.hs:(77,1)-(80,85)                        877          0    0.0    0.0     0.0    0.0
+ CAF:mkDebounce1                                     Control.Debounce                <no location info>                                771          0    0.0    0.0     0.0    0.0
+  ignoreExc                                          Control.Debounce                Control\Debounce.hs:94:1-55                       927          1    0.0    0.0     0.0    0.0
+ CAF:newTimeCache1                                   System.Log.FastLogger.Date      <no location info>                                440          0    0.0    0.0     0.0    0.0
+  getTime                                            System.Log.FastLogger.Date      System\Log\FastLogger\Date.hs:43:1-24             844          1    0.0    0.0     0.0    0.0
+ CAF:toBuilder                                       System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:44:1-9            464          0    0.0    0.0     0.0    0.0
+  toBuilder                                          System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:44:1-24           907          1    0.0    0.0     0.0    0.0
+ main                                                Main                            src\Main.hs:65:1-42                               810          0    0.0    0.0   100.0  100.0
+  toBench                                            Main                            src\Main.hs:(77,1)-(80,85)                        811          0    1.0    0.0   100.0  100.0
+   show                                              Main                            src\Main.hs:(70,5)-(74,26)                        873          1    0.0    0.0     0.0    0.0
+   fastLogger                                        Main                            src\Main.hs:(83,1)-(86,40)                        813          0    0.0    0.0    99.0  100.0
+    fastLogger.logType                               Main                            src\Main.hs:85:9-49                               821          1    0.0    0.0     0.0    0.0
+    newTimedFastLogger                               System.Log.FastLogger           System\Log\FastLogger.hs:(232,1)-(251,43)         822          1    0.0    0.0    99.0  100.0
+     newFileLoggerSet                                System.Log.FastLogger           System\Log\FastLogger.hs:76:1-80                  823          1    0.0    0.0     0.0    0.0
+      newFDLoggerSet                                 System.Log.FastLogger           System\Log\FastLogger.hs:(96,1)-(104,43)          828          1    0.0    0.0     0.0    0.0
+       flushLogStrRaw                                System.Log.FastLogger           System\Log\FastLogger.hs:(140,1)-(145,40)         929          1    0.0    0.0     0.0    0.0
+       mkDebounce                                    Control.Debounce                Control\Debounce.hs:(85,1)-(91,39)                835          1    0.0    0.0     0.0    0.0
+        ignoreExc                                    Control.Debounce                Control\Debounce.hs:94:1-55                       928          0    0.0    0.0     0.0    0.0
+         flushLogStrRaw                              System.Log.FastLogger           System\Log\FastLogger.hs:(140,1)-(145,40)         930          0    0.0    0.0     0.0    0.0
+          flushLogStrRaw.(...)                       System.Log.FastLogger           System\Log\FastLogger.hs:141:9-26                 932          7    0.0    0.0     0.0    0.0
+          flushLogStrRaw.flushIt                     System.Log.FastLogger           System\Log\FastLogger.hs:145:5-40                 934          7    0.0    0.0     0.0    0.0
+           flushLog                                  System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(59,1)-(67,58)    935          7    0.0    0.0     0.0    0.0
+            flushLog.\                               System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:67:29-58          937          7    0.0    0.0     0.0    0.0
+             writeLogStr                             System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(79,1)-(81,56)    938          7    0.0    0.0     0.0    0.0
+              toBufIOWith                            System.Log.FastLogger.IO        System\Log\FastLogger\IO.hs:(31,1)-(42,87)        939          7    0.0    0.0     0.0    0.0
+               toBufIOWith.loop                      System.Log.FastLogger.IO        System\Log\FastLogger\IO.hs:(33,5)-(42,87)        940          7    0.0    0.0     0.0    0.0
+                write                                System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(84,1)-(89,68)    962          7    0.0    0.0     0.0    0.0
+                 write.loop                          System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(86,5)-(89,68)    963          7    0.0    0.0     0.0    0.0
+                  writeRawBufferPtr2FD               System.Log.FastLogger.FileIO    System\Log\FastLogger\FileIO.hs:40:1-99           964          7    0.0    0.0     0.0    0.0
+                newTimedFastLogger.fileLoggerInit    System.Log.FastLogger           System\Log\FastLogger.hs:241:5-96                 950          0    0.0    0.0     0.0    0.0
+                 newTimedFastLogger.fileLoggerInit.\ System.Log.FastLogger           System\Log\FastLogger.hs:241:43-75                951          0    0.0    0.0     0.0    0.0
+                  toBench.toString                   Main                            src\Main.hs:79:9-61                               952          0    0.0    0.0     0.0    0.0
+                   toLogStr                          System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:79:5-33           958          0    0.0    0.0     0.0    0.0
+                    toLogStr                         System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:83:5-39           959          0    0.0    0.0     0.0    0.0
+                     toLogStr                        System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:77:5-49           960          0    0.0    0.0     0.0    0.0
+                      toLogStr                       System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           961          0    0.0    0.0     0.0    0.0
+                   toLogStr                          System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           953          0    0.0    0.0     0.0    0.0
+               newTimedFastLogger.fileLoggerInit     System.Log.FastLogger           System\Log\FastLogger.hs:241:5-96                 941          0    0.0    0.0     0.0    0.0
+                newTimedFastLogger.fileLoggerInit.\  System.Log.FastLogger           System\Log\FastLogger.hs:241:43-75                942          0    0.0    0.0     0.0    0.0
+                 pushLogStr                          System.Log.FastLogger           System\Log\FastLogger.hs:(110,1)-(121,9)          943          0    0.0    0.0     0.0    0.0
+                  pushLog                            System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(36,1)-(54,58)    944          0    0.0    0.0     0.0    0.0
+                   pushLog.checkBuf                  System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(52,5)-(54,58)    945          0    0.0    0.0     0.0    0.0
+                    mappend                          System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:64:5-69           946          0    0.0    0.0     0.0    0.0
+                 toBench.toString                    Main                            src\Main.hs:79:9-61                               947          0    0.0    0.0     0.0    0.0
+                  mappend                            System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:64:5-69           948          0    0.0    0.0     0.0    0.0
+            flushLog.\                               System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:60:48-60          936          7    0.0    0.0     0.0    0.0
+          flushLogStrRaw.l                           System.Log.FastLogger           System\Log\FastLogger.hs:141:9-26                 931          7    0.0    0.0     0.0    0.0
+          flushLogStrRaw.u                           System.Log.FastLogger           System\Log\FastLogger.hs:141:9-26                 933          7    0.0    0.0     0.0    0.0
+       newFDLoggerSet.arr                            System.Log.FastLogger           System\Log\FastLogger.hs:99:9-39                  849          1    0.0    0.0     0.0    0.0
+       newLogger                                     System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(27,1)-(31,34)    829          1    0.0    0.0     0.0    0.0
+      openFileFD                                     System.Log.FastLogger.FileIO    System\Log\FastLogger\FileIO.hs:(25,1)-(31,32)    824          1    0.0    0.0     0.0    0.0
+     newTimedFastLogger.fileLoggerInit               System.Log.FastLogger           System\Log\FastLogger.hs:241:5-96                 836          1    1.2    0.0    99.0  100.0
+      newTimedFastLogger.fileLoggerInit.\            System.Log.FastLogger           System\Log\FastLogger.hs:241:43-75                837          1    4.8    8.4    97.7  100.0
+       pushLogStr                                    System.Log.FastLogger           System\Log\FastLogger.hs:(110,1)-(121,9)          847   10000000   22.3   13.1    82.2   73.7
+        pushLog                                      System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(36,1)-(54,58)    893   10000000   14.6   30.2    59.0   60.6
+         pushLog.checkBuf                            System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(52,5)-(54,58)    894   10000000    2.4    2.8     4.0    7.4
+          mappend                                    System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:64:5-69           896    9887643    1.7    4.6     1.7    4.6
+         pushLog.\                                   System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:50:45-71          900     112357    0.1    0.0    40.4   23.0
+          writeLogStr                                System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(79,1)-(81,56)    901     112357    0.0    0.0    40.3   23.0
+           toBufIOWith                               System.Log.FastLogger.IO        System\Log\FastLogger\IO.hs:(31,1)-(42,87)        902     112357    0.1    0.2    40.3   23.0
+            toBufIOWith.loop                         System.Log.FastLogger.IO        System\Log\FastLogger\IO.hs:(33,5)-(42,87)        903     112357    0.6    0.1    27.6    5.9
+             write                                   System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(84,1)-(89,68)    924     112357    0.0    0.1    17.2    0.1
+              write.loop                             System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(86,5)-(89,68)    925     112357    0.1    0.0    17.2    0.1
+               writeRawBufferPtr2FD                  System.Log.FastLogger.FileIO    System\Log\FastLogger\FileIO.hs:40:1-99           926     112357   17.1    0.1    17.1    0.1
+             pushLog.checkBuf                        System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(52,5)-(54,58)    909          0    0.0    0.0     9.8    5.7
+              mappend                                System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:64:5-69           910          0    0.0    0.0     9.8    5.7
+               mempty                                System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:63:5-42           911          0    0.0    0.0     0.0    0.0
+               toBench.toString                      Main                            src\Main.hs:79:9-61                               914          0    0.0    0.0     9.8    5.7
+                toLogStr                             System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:79:5-33           920          0    0.0    0.0     5.2    2.8
+                 toLogStr                            System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:83:5-39           921          0    0.0    0.0     5.2    2.8
+                  toLogStr                           System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:77:5-49           922          0    0.0    0.0     5.2    2.8
+                   toLogStr                          System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           923          0    5.2    2.8     5.2    2.8
+                toLogStr                             System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           915          0    4.6    2.8     4.6    2.8
+            pushLog.checkBuf                         System.Log.FastLogger.Logger    System\Log\FastLogger\Logger.hs:(52,5)-(54,58)    904          0    0.0    0.0    12.5   16.9
+             mappend                                 System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:64:5-69           905          0    9.5   16.9    12.5   16.9
+              toBench.toString                       Main                            src\Main.hs:79:9-61                               912          0    0.0    0.0     3.0    0.0
+               toLogStr                              System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:79:5-33           916          0    0.0    0.0     1.3    0.0
+                toLogStr                             System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:83:5-39           917          0    0.0    0.0     1.3    0.0
+                 toLogStr                            System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:77:5-49           918          0    0.0    0.0     1.3    0.0
+                  toLogStr                           System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           919          0    1.3    0.0     1.3    0.0
+               toLogStr                              System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           913          0    1.8    0.0     1.8    0.0
+        pushLogStr.j                                 System.Log.FastLogger           System\Log\FastLogger.hs:(116,9)-(117,35)         850   10000000    0.0    0.0     0.0    0.0
+        pushLogStr.lim                               System.Log.FastLogger           System\Log\FastLogger.hs:115:9-19                 851   10000000    0.1    0.0     0.1    0.0
+        pushLogStr.logger                            System.Log.FastLogger           System\Log\FastLogger.hs:118:9-24                 848   10000000    0.2    0.0     0.2    0.0
+        pushLogStr.u                                 System.Log.FastLogger           System\Log\FastLogger.hs:114:9-28                 852   10000000    0.0    0.0     0.0    0.0
+        newFileLoggerSet                             System.Log.FastLogger           System\Log\FastLogger.hs:76:1-80                  897          0    0.0    0.0     0.6    0.0
+         newFDLoggerSet                              System.Log.FastLogger           System\Log\FastLogger.hs:(96,1)-(104,43)          898          0    0.0    0.0     0.6    0.0
+          mkDebounce                                 Control.Debounce                Control\Debounce.hs:(85,1)-(91,39)                899          0    0.6    0.0     0.6    0.0
+       toBench.toString                              Main                            src\Main.hs:79:9-61                               853   10000000    6.0    9.4    10.1   17.8
+        mappend                                      System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:64:5-69           892   10000000    1.9    4.7     1.9    4.7
+        toLogStr                                     System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           889   10000000    2.2    3.8     2.2    3.8
+       newTimeCache                                  System.Log.FastLogger.Date      System\Log\FastLogger\Date.hs:(65,1)-(67,5)       838          0    0.0    0.0     0.6    0.0
+        mkAutoUpdate                                 Control.AutoUpdate              Control\AutoUpdate.hs:106:1-47                    839          0    0.0    0.0     0.6    0.0
+         mkAutoUpdateHelper                          Control.AutoUpdate              Control\AutoUpdate.hs:(117,1)-(195,35)            840          0    0.6    0.0     0.6    0.0
+    newTimeCache                                     System.Log.FastLogger.Date      System\Log\FastLogger\Date.hs:(65,1)-(67,5)       818          0    0.0    0.0     0.0    0.0
+     formatDate                                      System.Log.FastLogger.Date      System\Log\FastLogger\Date.hs:(46,1)-(48,68)      845          7    0.0    0.0     0.0    0.0
+     mkAutoUpdate                                    Control.AutoUpdate              Control\AutoUpdate.hs:106:1-47                    819          0    0.0    0.0     0.0    0.0
+      mkAutoUpdateHelper                             Control.AutoUpdate              Control\AutoUpdate.hs:(117,1)-(195,35)            820          0    0.0    0.0     0.0    0.0
+       mkAutoUpdateHelper.fillRefOnExit              Control.AutoUpdate              Control\AutoUpdate.hs:(136,9)-(144,81)            831          1    0.0    0.0     0.0    0.0
+        mkAutoUpdateHelper.loop                      Control.AutoUpdate              Control\AutoUpdate.hs:(160,13)-(180,42)           833          6    0.0    0.0     0.0    0.0
+         catchSome                                   Control.AutoUpdate              Control\AutoUpdate.hs:201:1-87                    841          7    0.0    0.0     0.0    0.0
+       mkAutoUpdateHelper.loop                       Control.AutoUpdate              Control\AutoUpdate.hs:(160,13)-(180,42)           832          1    0.0    0.0     0.0    0.0
+        updateFreq                                   Control.AutoUpdate              Control\AutoUpdate.hs:76:7-16                     846          7    0.0    0.0     0.0    0.0
+        updateAction                                 Control.AutoUpdate              Control\AutoUpdate.hs:93:7-18                     842          1    0.0    0.0     0.0    0.0
+   toBench.toString                                  Main                            src\Main.hs:79:9-61                               854          0    0.0    0.0     0.0    0.0
+    toLogStr                                         System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:79:5-33           856          0    0.0    0.0     0.0    0.0
+     shiftL                                          Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50        863          1    0.0    0.0     0.0    0.0
+     unstreamChunks/outer                            Data.Text.Internal.Lazy.Fusion  Data\Text\Internal\Lazy\Fusion.hs:(62,15)-(68,43) 865          1    0.0    0.0     0.0    0.0
+      unstreamChunks/inner                           Data.Text.Internal.Lazy.Fusion  Data\Text\Internal\Lazy\Fusion.hs:(79,17)-(83,59) 868         27    0.0    0.0     0.0    0.0
+       unstreamChunks/resize                         Data.Text.Internal.Lazy.Fusion  Data\Text\Internal\Lazy\Fusion.hs:(72,72)-(76,38) 869          3    0.0    0.0     0.0    0.0
+        maBA                                         Data.Text.Array                 Data\Text\Array.hs:92:7-10                        872          6    0.0    0.0     0.0    0.0
+        shiftL                                       Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50        870          6    0.0    0.0     0.0    0.0
+        shiftR                                       Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51        871          3    0.0    0.0     0.0    0.0
+      shiftL                                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:60:5-50        866          1    0.0    0.0     0.0    0.0
+      shiftR                                         Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51        867          1    0.0    0.0     0.0    0.0
+     toLogStr                                        System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:83:5-39           858          0    0.0    0.0     0.0    0.0
+      encodeUtf8                                     Data.Text.Lazy.Encoding         Data\Text\Lazy\Encoding.hs:(150,1)-(160,70)       862          1    0.0    0.0     0.0    0.0
+       encodeUtf8.firstChunkSize                     Data.Text.Lazy.Encoding         Data\Text\Lazy\Encoding.hs:159:5-65               879          1    0.0    0.0     0.0    0.0
+        shiftR                                       Data.Text.Internal.Unsafe.Shift Data\Text\Internal\Unsafe\Shift.hs:63:5-51        880          1    0.0    0.0     0.0    0.0
+       encodeUtf8.strategy                           Data.Text.Lazy.Encoding         Data\Text\Lazy\Encoding.hs:160:5-70               878          1    0.0    0.0     0.0    0.0
+       encodeUtf8Builder                             Data.Text.Lazy.Encoding         Data\Text\Lazy\Encoding.hs:(163,1)-(164,79)       882          0    0.0    0.0     0.0    0.0
+        encodeUtf8Builder.\                          Data.Text.Lazy.Encoding         Data\Text\Lazy\Encoding.hs:164:26-59              883          1    0.0    0.0     0.0    0.0
+         encodeUtf8Builder                           Data.Text.Encoding              Data\Text\Encoding.hs:322:1-77                    885          0    0.0    0.0     0.0    0.0
+      toLogStr                                       System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:77:5-49           860          0    0.0    0.0     0.0    0.0
+       toLogStr                                      System.Log.FastLogger.LogStr    System\Log\FastLogger\LogStr.hs:75:5-54           861          1    0.0    0.0     0.0    0.0
